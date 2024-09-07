@@ -82,4 +82,57 @@ RSpec.describe Product, type: :model do
       'Stock quantity must be greater than or equal to 1'
     )
   end
+
+  describe 'Duplicate product handling' do
+    it 'rejects duplicate products for the same product owner' do
+      expect do
+        Product.create!(name: 'Laptop cases', developer_id:,
+                        category_id: category.id, price: 100, user_id:,
+                        stock_quantity: 10,
+                        description: 'A case for laptops' * 3)
+      end.to_not raise_error
+
+      product = Product.first
+      expect(product.name).to eq('Laptop cases')
+      expect(Product.count).to eq(1)
+
+      expect do
+        Product.create!(name: 'Laptop cases', developer_id:,
+                        category_id: category.id, price: 100, user_id:,
+                        stock_quantity: 10,
+                        description: 'A case for laptops' * 3)
+      end.to raise_error(ActiveRecord::RecordNotUnique)
+
+      expect(Product.count).to eq(1)
+    end
+
+    it 'allows similar product names for different users' do
+      second_user_id = UUID7.generate
+
+      # first product
+      expect do
+        Product.create!(name: 'Laptop cases', developer_id:,
+                        category_id: category.id,
+                        price: 100, user_id:, stock_quantity: 10,
+                        description: 'A case for laptops' * 3)
+      end.to_not raise_error
+      expect(Product.count).to eq(1)
+
+      # second product
+      expect do
+        Product.create!(name: 'Laptop cases', developer_id:,
+                        category_id: category.id,
+                        price: 100, user_id: second_user_id,
+                        stock_quantity: 10,
+                        description: 'A case for laptops' * 3)
+      end.to_not raise_error
+
+      expect(Product.count).to eq(2)
+
+      expect(Product.first.user_id).to eq(user_id)
+      expect(Product.last.user_id).to eq(second_user_id)
+
+      expect(category.products).to eq([Product.first, Product.last])
+    end
+  end
 end
