@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2f32ee1b-c3ab-4825-b0a0-6e203e00c739" name="Changes" comment="fix: Fix linting issues and move unique category validation to DB-level">
+    <list default="true" id="2f32ee1b-c3ab-4825-b0a0-6e203e00c739" name="Changes" comment="chore: Add dotenv-rails gem to track environment variables">
       <change beforePath="$PROJECT_DIR$/.github/workflows/ci.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/ci.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/database.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config/database.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,28 +68,28 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Rake.spec: commercecore-product-management-service.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;code.cleanup.on.save&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;20.17.0&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;20.16.5&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
-    &quot;nodejs_interpreter_path&quot;: &quot;/home/thelazyprogrammer/.asdf/shims/node&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;rearrange.code.on.save&quot;: &quot;true&quot;,
-    &quot;ruby.structure.view.model.defaults.configured&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.CommitDialog&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Rake.spec: commercecore-product-management-service.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "code.cleanup.on.save": "true",
+    "git-widget-placeholder": "ci/fix-test-pipeline-job",
+    "javascript.nodejs.core.library.configured.version": "20.17.0",
+    "javascript.nodejs.core.library.typings.version": "20.16.5",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "nodejs_interpreter_path": "/home/thelazyprogrammer/.asdf/shims/node",
+    "nodejs_package_manager_path": "npm",
+    "rearrange.code.on.save": "true",
+    "ruby.structure.view.model.defaults.configured": "true",
+    "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Rake.spec: commercecore-product-management-service">
     <configuration name="commercecore-product-management-service" type="RailsRunConfigurationType" factoryName="Rails">
       <module name="commercecore-product-management-service" />
@@ -194,7 +196,7 @@
       <workItem from="1725653030951" duration="777000" />
       <workItem from="1725653879423" duration="239000" />
       <workItem from="1725658239120" duration="21397000" />
-      <workItem from="1725703844394" duration="4917000" />
+      <workItem from="1725703844394" duration="7068000" />
     </task>
     <task id="LOCAL-00001" summary="feat: Add initial setup for product management microservice API&#10;&#10;This update includes the initial project files, models for Category and&#10;Products. Also it has tests for all two models.&#10;&#10;The database is setup to use PostgreSQL as planned.">
       <option name="closed" value="true" />
@@ -244,7 +246,23 @@
       <option name="project" value="LOCAL" />
       <updated>1725708612874</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="refactor: Change adapter from 'postgres' to 'postgresql' and add '-A' to rubocop">
+      <option name="closed" value="true" />
+      <created>1725708931436</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1725708931436</updated>
+    </task>
+    <task id="LOCAL-00008" summary="chore: Add dotenv-rails gem to track environment variables">
+      <option name="closed" value="true" />
+      <created>1725711013085</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1725711013086</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -270,32 +288,38 @@
     <MESSAGE value="fix: Fix bundler issues" />
     <MESSAGE value="fix: Update CI pipeline to handle database initialization for tests" />
     <MESSAGE value="fix: Fix linting issues and move unique category validation to DB-level" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="refactor: Change adapter from 'postgres' to 'postgresql' and add '-A' to rubocop" />
+    <MESSAGE value="chore: Add dotenv-rails gem to track environment variables" />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: Add dotenv-rails gem to track environment variables" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
-  <component name="WfRunsListSearchHistory">{
-  &quot;history&quot;: [
+  <component name="WfRunsListSearchHistory"><![CDATA[{
+  "history": [
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
     },
     {
-      &quot;branch&quot;: &quot;main&quot;,
-      &quot;currentBranchFilter&quot;: true
+      "branch": "main",
+      "currentBranchFilter": true
+    },
+    {
+      "branch": "ci/fix-test-pipeline-job",
+      "currentBranchFilter": true
     }
   ],
-  &quot;lastFilter&quot;: {
-    &quot;branch&quot;: &quot;main&quot;,
-    &quot;currentBranchFilter&quot;: true
+  "lastFilter": {
+    "branch": "ci/fix-test-pipeline-job",
+    "currentBranchFilter": true
   }
-}</component>
+}]]></component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/commercecore_product_management_service@spec__commercecore_product_management_service.rcov" NAME="spec: commercecore-product-management-service Coverage Results" MODIFIED="1725708675819" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="commercecore-product-management-service" />
+    <SUITE FILE_PATH="coverage/commercecore_product_management_service@spec__commercecore_product_management_service.rcov" NAME="spec: commercecore-product-management-service Coverage Results" MODIFIED="1725709312934" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="commercecore-product-management-service" />
   </component>
 </project>
