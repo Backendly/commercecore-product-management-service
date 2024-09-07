@@ -15,8 +15,4 @@ class Category < ApplicationRecord
 
   validates_word_count_of :description, min_words: 2, max_words: 10
   validates_word_count_of :name, min_words: 1, max_words: 10
-
-  validates :name,
-            uniqueness: { scope: :developer_id, case_sensitive: false,
-                          message: '%<value>s already exists' }
 end

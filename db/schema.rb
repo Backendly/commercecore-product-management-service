@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 20_240_906_221_153) do
+ActiveRecord::Schema[7.2].define(version: 20_240_907_111_918) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -24,6 +24,8 @@ ActiveRecord::Schema[7.2].define(version: 20_240_906_221_153) do
     t.uuid "developer_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index %w[name developer_id],
+            name: "index_categories_on_name_and_developer_id", unique: true
   end
 
   create_table "products", id: :uuid, default: lambda {

@@ -110,7 +110,7 @@ RSpec.describe Category, type: :model do
         Category.create!(name: 'Home Appliances',
                          developer_id:,
                          description: 'Home appliance products category')
-      end.to raise_error(ActiveRecord::RecordInvalid)
+      end.to raise_error(ActiveRecord::RecordNotUnique)
 
       expect(Category.count).to eq(1)
     end

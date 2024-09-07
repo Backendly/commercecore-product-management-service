@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Base application record
 class ApplicationRecord < ActiveRecord::Base
   primary_abstract_class
 
@@ -6,7 +9,7 @@ class ApplicationRecord < ActiveRecord::Base
   private
 
     def generate_uuid_v7
-      return if self.class.attribute_types["id"].type != :uuid
+      return if self.class.attribute_types['id'].type != :uuid
 
       self.id ||= UUID7.generate
     end

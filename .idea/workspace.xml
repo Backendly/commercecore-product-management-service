@@ -4,19 +4,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2f32ee1b-c3ab-4825-b0a0-6e203e00c739" name="Changes" comment="chore: Add custom rubocop lint config file">
+    <list default="true" id="2f32ee1b-c3ab-4825-b0a0-6e203e00c739" name="Changes" comment="fix: Update CI pipeline to handle database initialization for tests">
       <change beforePath="$PROJECT_DIR$/.github/workflows/ci.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/ci.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/commercecore-product-management-service.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/commercecore-product-management-service.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.rubocop.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.rubocop.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gemfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Gemfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/brakeman" beforeDir="false" afterPath="$PROJECT_DIR$/bin/brakeman" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/bundle" beforeDir="false" afterPath="$PROJECT_DIR$/bin/bundle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rails" beforeDir="false" afterPath="$PROJECT_DIR$/bin/rails" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rake" beforeDir="false" afterPath="$PROJECT_DIR$/bin/rake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rubocop" beforeDir="false" afterPath="$PROJECT_DIR$/bin/rubocop" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rakefile" beforeDir="false" afterPath="$PROJECT_DIR$/Rakefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/channels/application_cable/channel.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/channels/application_cable/channel.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/channels/application_cable/connection.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/channels/application_cable/connection.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/application_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/application_controller.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/jobs/application_job.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/jobs/application_job.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/mailers/application_mailer.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/mailers/application_mailer.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/application_record.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/application_record.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/category.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/category.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.ru" beforeDir="false" afterPath="$PROJECT_DIR$/config.ru" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/application.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/application.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/boot.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/boot.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/environment.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/environment.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/environments/development.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/environments/development.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/environments/test.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/environments/test.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/initializers/cors.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/initializers/cors.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/initializers/filter_parameter_logging.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/initializers/filter_parameter_logging.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/initializers/inflections.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/initializers/inflections.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/puma.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/puma.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/schema.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/schema.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/seeds.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/seeds.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spec/models/category_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/models/category_spec.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spec/rails_helper.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/rails_helper.rb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -205,7 +219,7 @@
       <workItem from="1725653030951" duration="777000" />
       <workItem from="1725653879423" duration="239000" />
       <workItem from="1725658239120" duration="21397000" />
-      <workItem from="1725703844394" duration="891000" />
+      <workItem from="1725703844394" duration="4381000" />
     </task>
     <task id="LOCAL-00001" summary="feat: Add initial setup for product management microservice API&#10;&#10;This update includes the initial project files, models for Category and&#10;Products. Also it has tests for all two models.&#10;&#10;The database is setup to use PostgreSQL as planned.">
       <option name="closed" value="true" />
@@ -223,11 +237,46 @@
       <option name="project" value="LOCAL" />
       <updated>1725704088355</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="chore: Add custom rubocop lint config file">
+      <option name="closed" value="true" />
+      <created>1725704994997</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1725704994997</updated>
+    </task>
+    <task id="LOCAL-00004" summary="fix: Fix bundler issues">
+      <option name="closed" value="true" />
+      <created>1725705031667</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1725705031667</updated>
+    </task>
+    <task id="LOCAL-00005" summary="fix: Update CI pipeline to handle database initialization for tests">
+      <option name="closed" value="true" />
+      <created>1725705112482</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1725705112482</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
@@ -235,7 +284,9 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="feat: Add initial setup for product management microservice API&#10;&#10;This update includes the initial project files, models for Category and&#10;Products. Also it has tests for all two models.&#10;&#10;The database is setup to use PostgreSQL as planned." />
     <MESSAGE value="chore: Add custom rubocop lint config file" />
-    <option name="LAST_COMMIT_MESSAGE" value="chore: Add custom rubocop lint config file" />
+    <MESSAGE value="fix: Fix bundler issues" />
+    <MESSAGE value="fix: Update CI pipeline to handle database initialization for tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: Update CI pipeline to handle database initialization for tests" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -261,6 +312,6 @@
   }
 }</component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/commercecore_product_management_service@spec__commercecore_product_management_service.rcov" NAME="spec: commercecore-product-management-service Coverage Results" MODIFIED="1725704264937" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="commercecore-product-management-service" />
+    <SUITE FILE_PATH="coverage/commercecore_product_management_service@spec__commercecore_product_management_service.rcov" NAME="spec: commercecore-product-management-service Coverage Results" MODIFIED="1725705119925" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="commercecore-product-management-service" />
   </component>
 </project>

@@ -23,3 +23,14 @@ Metrics/MethodLength:
 Metrics/ClassLength:
   Exclude:
     - 'spec/**/*'
+
+Layout/LineLength:
+  Exclude:
+    - 'config/**/*'
+    - Gemfile
+    - spec/rails_helper.rb
+    - spec/spec_helper.rb
+
+Style/Documentation:
+  Exclude:
+    - db/**/*
