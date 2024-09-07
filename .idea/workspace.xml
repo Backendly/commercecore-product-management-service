@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2f32ee1b-c3ab-4825-b0a0-6e203e00c739" name="Changes" comment="chore: Add dotenv-rails gem to track environment variables">
+    <list default="true" id="2f32ee1b-c3ab-4825-b0a0-6e203e00c739" name="Changes" comment="chore: Add dependency step for setting up postgres">
       <change beforePath="$PROJECT_DIR$/.github/workflows/ci.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/ci.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/database.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config/database.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +81,7 @@
     "nodejs_package_manager_path": "npm",
     "rearrange.code.on.save": "true",
     "ruby.structure.view.model.defaults.configured": "true",
-    "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog"
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
@@ -196,7 +195,7 @@
       <workItem from="1725653030951" duration="777000" />
       <workItem from="1725653879423" duration="239000" />
       <workItem from="1725658239120" duration="21397000" />
-      <workItem from="1725703844394" duration="7068000" />
+      <workItem from="1725703844394" duration="9186000" />
     </task>
     <task id="LOCAL-00001" summary="feat: Add initial setup for product management microservice API&#10;&#10;This update includes the initial project files, models for Category and&#10;Products. Also it has tests for all two models.&#10;&#10;The database is setup to use PostgreSQL as planned.">
       <option name="closed" value="true" />
@@ -262,7 +261,23 @@
       <option name="project" value="LOCAL" />
       <updated>1725711013086</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="chore: Update to use localhost, username and password fields for tests">
+      <option name="closed" value="true" />
+      <created>1725711185010</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1725711185010</updated>
+    </task>
+    <task id="LOCAL-00010" summary="chore: Add dependency step for setting up postgres">
+      <option name="closed" value="true" />
+      <created>1725711233503</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1725711233503</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -290,7 +305,9 @@
     <MESSAGE value="fix: Fix linting issues and move unique category validation to DB-level" />
     <MESSAGE value="refactor: Change adapter from 'postgres' to 'postgresql' and add '-A' to rubocop" />
     <MESSAGE value="chore: Add dotenv-rails gem to track environment variables" />
-    <option name="LAST_COMMIT_MESSAGE" value="chore: Add dotenv-rails gem to track environment variables" />
+    <MESSAGE value="chore: Update to use localhost, username and password fields for tests" />
+    <MESSAGE value="chore: Add dependency step for setting up postgres" />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: Add dependency step for setting up postgres" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -320,6 +337,6 @@
   }
 }]]></component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/commercecore_product_management_service@spec__commercecore_product_management_service.rcov" NAME="spec: commercecore-product-management-service Coverage Results" MODIFIED="1725709312934" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="commercecore-product-management-service" />
+    <SUITE FILE_PATH="coverage/commercecore_product_management_service@spec__commercecore_product_management_service.rcov" NAME="spec: commercecore-product-management-service Coverage Results" MODIFIED="1725711222934" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="commercecore-product-management-service" />
   </component>
 </project>
