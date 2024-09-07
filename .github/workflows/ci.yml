@@ -54,6 +54,9 @@ jobs:
       - name: Install PostgreSQL client
         run: sudo apt-get update && sudo apt-get install --no-install-recommends -y postgresql-client
 
+      - name: Install dependent libraries
+        run: sudo apt-get install libpq-dev
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -64,15 +67,20 @@ jobs:
           bundler-cache: true
 
       - name: Install dependencies
+        env:
+          RAILS_ENV: test
         run: bundle install
 
       - name: Set up database
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         run: bin/rails db:create db:schema:load db:migrate
 
       - name: Run RSpec tests
         env:
           RAILS_ENV: test
-        run: bundle exec rspec
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        run: bundle exec rspec --require rails_helper
