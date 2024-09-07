@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 20_240_907_111_918) do
+ActiveRecord::Schema[7.2].define(version: 20_240_907_131_847) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -41,6 +41,8 @@ ActiveRecord::Schema[7.2].define(version: 20_240_907_111_918) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_products_on_category_id"
+    t.index %w[name developer_id user_id],
+            name: "index_products_on_name_and_developer_id_and_user_id", unique: true
   end
 
   add_foreign_key "products", "categories"
