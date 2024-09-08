@@ -4,10 +4,11 @@
 class Product < ApplicationRecord
   include WordCountValidatable
 
-  belongs_to :category
+  belongs_to :category, optional: true
 
-  validates :developer_id, :name, :category_id, :price, :user_id,
-            :stock_quantity, :description, presence: true
+  validates :developer_id, :name, :price, :user_id,
+            :stock_quantity, :description, :currency, presence: true
+  validates :available, inclusion: { in: [true, false] }
 
   validate :price_must_be_numeric
   validates :stock_quantity, numericality: { only_integer: true }
