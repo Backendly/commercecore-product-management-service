@@ -44,6 +44,9 @@ group :development, :test do
   gem 'factory_bot_rails'
 
   gem 'dotenv-rails'
+
+  # code coverage
+  gem 'simplecov', require: false
 end
 
 gem 'uuid7', '~> 0.2.0'
