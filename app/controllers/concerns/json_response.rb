@@ -17,7 +17,7 @@ module JsonResponse
   # @param extra_meta [Hash] Additional metadata to include in the response
   #   (default: {}).
   def json_response(resource, serializer:, message: 'Request successful',
-    extra_meta: {})
+                    extra_meta: {})
     if paginated?(resource)
       render_paginated(resource, message:, extra_meta:, serializer:)
     else
@@ -65,8 +65,8 @@ module JsonResponse
     # @return [Hash] The complete JSON response with data and meta.
     def render_single(resource, message:, extra_meta:, serializer:)
       meta = {
-               message:
-             }.merge(extra_meta)
+        message:
+      }.merge(extra_meta)
 
       serializer.new(resource).serializable_hash.merge(meta:)
     end

@@ -25,7 +25,7 @@ module Api
         # Render the JSON response with the categories
         render json: json_response(
           categories, serializer:,
-          message: 'Categories retrieved successfully'
+                      message: 'Categories retrieved successfully'
         )
       end
 
@@ -36,7 +36,7 @@ module Api
         # Render the JSON response with the category
         render json: json_response(
           category, serializer:,
-          message: 'Category retrieved successfully'
+                    message: 'Category retrieved successfully'
         )
       end
 
@@ -49,12 +49,12 @@ module Api
         if @category.save
           # Render the JSON response with the created category
           render json: json_response(@category,
-            message: 'Category created successfully',
-            serializer:), status: :created
+                                     message: 'Category created successfully',
+                                     serializer:), status: :created
         else
           # Render an error response if the category could not be created
           render_error(error: category.errors,
-            status: :unprocessable_content)
+                       status: :unprocessable_content)
         end
       end
 
@@ -65,8 +65,8 @@ module Api
         if @category.update(api_v1_category_params)
           # Render the JSON response with the updated category
           render json: json_response(@category,
-            serializer:,
-            message: 'Category updated successfully')
+                                     serializer:,
+                                     message: 'Category updated successfully')
         else
           # Render an error response if the category could not be updated
           render json: category.errors, status: :unprocessable_content
@@ -108,8 +108,8 @@ module Api
         # Permits the name and description parameters and merges the developer token
         def api_v1_category_params
           params.require(:category)
-          .permit(:name, :description)
-          .merge(developer_id: developer_token)
+                .permit(:name, :description)
+                .merge(developer_id: developer_token)
         end
 
         # Returns the serializer class for the category
