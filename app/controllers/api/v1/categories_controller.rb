@@ -19,8 +19,7 @@ module Api
         # Fetch categories with pagination
         categories = Category.page(params.fetch(:page, 1)).per(page_size)
 
-        # Filter categories by developer token
-        categories = categories.where(developer_id: developer_token)
+        categories = perform_filtering(categories)
 
         # Render the JSON response with the categories
         render json: json_response(
@@ -87,7 +86,8 @@ module Api
         # Reader method for the category instance variable
         attr_reader :category
 
-        # Determines the page size for pagination, ensuring it does not exceed the maximum limit
+        # Determines the page size for pagination, ensuring it does not exceed
+        # the maximum limit
         def page_size
           [
             params.fetch(:page_size, MAX_PAGINATION_SIZE).to_i,
@@ -95,8 +95,8 @@ module Api
           ].min
         end
 
-        # Use callbacks to share common setup or constraints between actions.
-        # Sets the category instance variable based on the ID and developer token
+        # Sets the category instance variable based on the ID and developer
+        # token
         def set_api_v1_category
           @category = Category.find_by!(
             id: params[:id],
@@ -105,7 +105,8 @@ module Api
         end
 
         # Only allow a list of trusted parameters through.
-        # Permits the name and description parameters and merges the developer token
+        # Permits the name and description parameters and merges the developer
+        # token
         def api_v1_category_params
           params.require(:category)
                 .permit(:name, :description)
@@ -154,6 +155,25 @@ module Api
           else
             true
           end
+        end
+
+        def perform_filtering(categories)
+          # Filter categories by developer token
+          categories = categories.where(developer_id: developer_token)
+
+          # Filter categories by name
+          if params[:name].present?
+            categories = categories.where('name ILIKE ?', "%#{params[:name]}%")
+          end
+
+          # filter categories by the search term, so any category that
+          # has the search term in its name or description will be returned
+          return categories if params[:search].blank?
+
+          categories.where(
+            'name ILIKE :search OR description ILIKE :search',
+            search: "%#{params[:search]}%"
+          )
         end
     end
   end
