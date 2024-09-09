@@ -9,7 +9,6 @@ module Api
       MAX_PAGINATION_SIZE = 100
 
       # Before actions to set up authorization and category object
-      before_action :authorization_credentials
       before_action :set_api_v1_category, only: %i[show update destroy]
 
       # GET /api/v1/categories
@@ -45,16 +44,12 @@ module Api
       def create
         @category = Category.new(api_v1_category_params)
 
-        if @category.save
-          # Render the JSON response with the created category
-          render json: json_response(@category,
-                                     message: 'Category created successfully',
-                                     serializer:), status: :created
-        else
-          # Render an error response if the category could not be created
-          render_error(error: category.errors,
-                       status: :unprocessable_content)
-        end
+        @category.save! # Raise an error when the category could not be saved
+
+        # Render the JSON response with the created category
+        render json: json_response(@category,
+                                   message: 'Category created successfully',
+                                   serializer:), status: :created
       end
 
       # PATCH/PUT /api/v1/categories/1
@@ -116,45 +111,6 @@ module Api
         # Returns the serializer class for the category
         def serializer
           CategorySerializer
-        end
-
-        # Returns the developer token from the request headers
-        def developer_token
-          request.headers.fetch('X-Developer-Token', nil)
-        end
-
-        # Validates the developer token before processing the request
-        def authorization_credentials
-          return if valid_developer_token?
-
-          # Render an error response if the developer token is invalid
-          render_error(
-            error: 'Authorization failed',
-            details: {
-              error: 'Invalid developer token',
-              message: 'Please provide a valid developer token'
-            },
-            status: :unauthorized
-          )
-        end
-
-        # This method calls the user service API to validate the developer token
-        #
-        # TODO: Implement the actual API call to the user service
-        def valid_developer_token?
-          # Placeholder for actual API call
-          # response = UserApiService.validate_token(developer_token)
-          #
-          # return true if response.code == 200
-          #
-          # false
-
-          # Temporary validation logic
-          if developer_token.nil?
-            false
-          else
-            true
-          end
         end
 
         def perform_filtering(categories)
