@@ -205,6 +205,65 @@ RSpec.describe "/api/v1/categories", type: :request do
           end
         end
       end
+
+      context 'with query parameters in the request path' do
+        before do
+          Category.create!(
+            name: 'Body lotions', description: 'Skin care products',
+            developer_id: first_developer_token
+          )
+        end
+
+        context 'with filters based on the name' do
+          it 'filters the categories based on the name' do
+            get api_v1_categories_url,
+                params: { name: 'Body lotions' },
+                headers: first_dev_headers
+
+            expect(response).to have_http_status(:ok)
+            expect(response_body[:data].size).to eq(1)
+
+            response_data = response_body[:data]
+
+            expect(response_data.first.dig(:attributes, :name)).to \
+              eq('Body lotions')
+          end
+
+          it 'returns an empty array when no match is found' do
+            get api_v1_categories_url,
+                params: { name: 'Body lotions' },
+                headers: second_dev_headers # second dev does not have this one
+
+            expect(response).to have_http_status(:ok)
+            expect(response_body[:data].size).to eq(0)
+          end
+
+          it 'returns all categories when the filter is not found' do
+            get api_v1_categories_url,
+                params: { unknown: 'Body lotions' },
+                headers: first_dev_headers
+
+            expect(response).to have_http_status(:ok)
+            expect(response_body[:data].size).to eq(2)
+          end
+        end
+
+        context "with filters based on the 'search' keyword" do
+          it 'returns all categories with the searched keyword' do
+            get api_v1_categories_url,
+                params: { search: 'home' },
+                headers: first_dev_headers
+
+            expect(response).to have_http_status(:ok)
+            expect(response_body[:data].size).to eq(1)
+
+            response_data = response_body[:data]
+
+            expect(response_data.first.dig(:attributes, :name)).to \
+              eq('Home Appliance')
+          end
+        end
+      end
     end
 
     describe "GET /show" do
