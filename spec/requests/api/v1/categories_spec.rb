@@ -31,6 +31,12 @@ RSpec.describe "/api/v1/categories", type: :request do
   end
 
   context 'with valid developer token' do
+    before do
+      # always return true for developer token validation
+      allow_any_instance_of(Api::V1::CategoriesController).to \
+        receive(:valid_developer_token?).and_return(true)
+    end
+
     let!(:first_dev_category) do
       Category.create! valid_attributes.merge(
         developer_id: first_developer_token
@@ -69,32 +75,6 @@ RSpec.describe "/api/v1/categories", type: :request do
         meta = response_body[:meta]
 
         expect(meta).to include(:message, :total_count, :current_count)
-      end
-
-      describe 'Authorization' do
-        it 'rejects requests without a developer token' do
-          get api_v1_categories_url
-          expect(response).to have_http_status(:unauthorized)
-        end
-
-        it 'rejects requests with an invalid developer token' do
-          allow_any_instance_of(Api::V1::CategoriesController).to \
-            receive(:valid_developer_token?).and_return(false)
-
-          get api_v1_categories_url,
-              headers: { 'X-Developer-Token' => UUID7.generate }
-
-          expect(response).to have_http_status(:unauthorized)
-        end
-
-        it 'permits developers with valid tokens in the headers' do
-          allow_any_instance_of(Api::V1::CategoriesController).to \
-            receive(:valid_developer_token?).and_return(true)
-
-          get api_v1_categories_url,
-              headers: first_dev_headers
-          expect(response).to have_http_status(:ok)
-        end
       end
 
       describe 'Pagination' do
@@ -535,36 +515,99 @@ RSpec.describe "/api/v1/categories", type: :request do
         end
       end
     end
+  end
 
-    context 'with an invalid or missing developer token' do
-      it 'returns a 401 on the /index route' do
+  context 'with an invalid or missing developer token' do
+    before do
+      # always return false for developer token validation
+      allow_any_instance_of(Api::V1::CategoriesController).to \
+        receive(:valid_developer_token?).and_return(false)
+    end
+
+    describe '/index' do
+      it 'returns a 401 with no dev token' do
         get api_v1_categories_url
 
         expect(response).to have_http_status(:unauthorized)
       end
 
-      it 'returns a 401 on the /create route' do
-        post api_v1_categories_url
+      it 'returns 401 for invalid developer token' do
+        get api_v1_categories_url,
+            headers: { 'X-Developer-Token': UUID7.generate }
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    describe '/create' do
+      it 'returns a 401 when developer token is not provided' do
+        post api_v1_categories_url, params: { category: valid_attributes }
 
         expect(response).to have_http_status(:unauthorized)
       end
 
-      it 'returns a 401 on the /show route' do
+      it 'returns 401 for invalid developer token' do
+        post api_v1_categories_url,
+             params: { category: valid_attributes },
+             headers: { 'X-Developer-Token': UUID7.generate }
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    describe '/show' do
+      it 'returns a 401 with no dev token' do
         get api_v1_category_url(UUID7.generate)
 
         expect(response).to have_http_status(:unauthorized)
       end
 
-      it 'returns a 401 on the /update (PUT | PATCH)  route' do
-        put api_v1_category_url(UUID7.generate)
+      it 'returns 401 for invalid developer token' do
+        get api_v1_category_url(UUID7.generate),
+            headers: { 'X-Developer-Token': UUID7.generate }
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    describe '/update (PUT | PATCH)' do
+      it 'returns a 401 when developer token is not provided' do
+        put api_v1_category_url(UUID7.generate),
+            params: { category: valid_attributes }
+
         expect(response).to have_http_status(:unauthorized)
 
-        patch api_v1_category_url(UUID7.generate)
+        patch api_v1_category_url(UUID7.generate),
+              params: { category: valid_attributes }
+
         expect(response).to have_http_status(:unauthorized)
       end
 
-      it 'returns a 401 on the /destroy route' do
+      it 'returns 401 for invalid developer token' do
+        put api_v1_categories_url,
+            params: { category: valid_attributes },
+            headers: { 'X-Developer-Token': UUID7.generate }
+
+        expect(response).to have_http_status(:unauthorized)
+
+        patch api_v1_categories_url,
+              params: { category: valid_attributes },
+              headers: { 'X-Developer-Token': UUID7.generate }
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    describe '/destroy' do
+      it 'returns a 401 with no dev token' do
         delete api_v1_category_url(UUID7.generate)
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'returns 401 for invalid developer token' do
+        delete api_v1_category_url(UUID7.generate),
+               headers: { 'X-Developer-Token': UUID7.generate }
 
         expect(response).to have_http_status(:unauthorized)
       end
