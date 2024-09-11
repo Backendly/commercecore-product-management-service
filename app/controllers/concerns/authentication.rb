@@ -37,11 +37,14 @@ module Authentication
     def verify_developer_token!
       return if valid_developer_token?
 
+      # TODO: return the cached developer ID after it has been validated
+
       render_error(
         error: 'Authorization failed',
         details: {
           error: 'Invalid developer token',
-          message: 'Please provide a valid developer token'
+          message: 'Please provide a valid developer token in the header. ' \
+            'E.g., X-Developer-Token: <developer_token>'
         },
         status: :unauthorized
       )
@@ -56,7 +59,7 @@ module Authentication
         error: 'Authorization failed',
         details: {
           error: 'Invalid user ID',
-          message: 'Please provide a valid user ID'
+          message: 'Please provide a valid user ID. E.g., X-User-Id: <user_id>'
         },
         status: :unauthorized
       )
