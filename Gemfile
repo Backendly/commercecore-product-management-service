@@ -56,3 +56,7 @@ gem 'kaminari'
 
 # for JSON response serialization
 gem 'jsonapi-serializer'
+
+group :test do
+  gem 'database_cleaner-active_record'
+end
