@@ -78,7 +78,6 @@ class ApplicationController < ActionController::API
       logger.error "#{error.class.name}: #{error.message}"
       render_error(
         error: 'Internal Server Error',
-        # details: { exception: error.class.name, message: error.message },
         status: :internal_server_error
       )
     end
@@ -87,7 +86,7 @@ class ApplicationController < ActionController::API
     def validation_error(error)
       render_error(
         error: 'Validation Failed',
-        details: error.record.errors.full_messages.to_sentence,
+        details: error.record.errors.to_hash(full_messages: true),
         status: :unprocessable_content
       )
     end
