@@ -16,12 +16,22 @@ module JsonResponse
   #   metadata (default: 'Request successful').
   # @param extra_meta [Hash] Additional metadata to include in the response
   #   (default: {}).
-  def json_response(resource, serializer:, message: 'Request successful',
-                    extra_meta: {})
+  def json_response(
+    resource, serializer:, message: 'Request successful',
+    extra_meta: {}
+  )
+
+    metadata = {
+      status_code:,
+      success: status_code < 400
+    }
+
+    metadata.merge(extra_meta)
+
     if paginated?(resource)
-      render_paginated(resource, message:, extra_meta:, serializer:)
+      render_paginated(resource, message:, extra_meta: metadata, serializer:)
     else
-      render_single(resource, message:, extra_meta:, serializer:)
+      render_single(resource, message:, extra_meta: metadata, serializer:)
     end
   end
 
@@ -64,10 +74,14 @@ module JsonResponse
     # @param extra_meta [Hash] Additional metadata to include in the response.
     # @return [Hash] The complete JSON response with data and meta.
     def render_single(resource, message:, extra_meta:, serializer:)
-      meta = {
-        message:
-      }.merge(extra_meta)
+      meta = { message: }.merge(extra_meta)
 
       serializer.new(resource).serializable_hash.merge(meta:)
+    end
+
+    def status_code
+      return 201 if response.request.method == 'POST'
+
+      200
     end
 end
