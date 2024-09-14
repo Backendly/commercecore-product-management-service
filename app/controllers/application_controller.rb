@@ -10,6 +10,7 @@ class ApplicationController < ActionController::API
   rescue_from ActiveRecord::RecordInvalid, with: :validation_error
   rescue_from NoMethodError, NameError, with: :internal_server_error
   rescue_from ActionController::RoutingError, with: :invalid_route
+  rescue_from ActionController::ParameterMissing, with: :bad_request
 
   # rubocop:disable Metrics/MethodLength
 
@@ -88,6 +89,14 @@ class ApplicationController < ActionController::API
         error: 'Validation Failed',
         details: error.record.errors.to_hash(full_messages: true),
         status: :unprocessable_content
+      )
+    end
+
+    def bad_request(error)
+      render_error(
+        error: 'Bad Request',
+        details: error.message,
+        status: :bad_request
       )
     end
 end
