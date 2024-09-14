@@ -48,5 +48,7 @@ module CommercecoreProductManagementService
     config.generators do |generate|
       generate.orm :active_record, primary_key_type: :uuid
     end
+
+    config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] }
   end
 end
