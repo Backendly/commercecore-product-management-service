@@ -6,7 +6,7 @@ class Product < ApplicationRecord
 
   belongs_to :category, optional: true
 
-  validates :developer_id, :name, :price, :user_id,
+  validates :developer_id, :name, :price, :user_id, :app_id,
             :stock_quantity, :description, :currency, presence: true
   validates :available, inclusion: { in: [true, false] }
 
