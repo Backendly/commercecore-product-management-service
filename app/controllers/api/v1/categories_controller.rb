@@ -5,9 +5,6 @@ module Api
     # Controller for version of Categories side of Product Management Service
     # This controller handles CRUD operations for categories.
     class CategoriesController < ApplicationController
-      # Maximum number of items to be returned in a single page
-      MAX_PAGINATION_SIZE = 100
-
       # Before actions to set up authorization and category object
       before_action :set_api_v1_category, only: %i[show update destroy]
 
@@ -15,20 +12,20 @@ module Api
       # GET /api/v1/categories.json
       # Retrieves a paginated list of categories filtered by developer token
       def index
-        # Fetch categories with pagination
-        categories = Category.page(params.fetch(:page, 1)).per(page_size)
+        categories = Category.all
 
         categories = perform_filtering(categories)
 
-        # Render the JSON response with the categories
+        paginated_categories = categories.page(params[:page]).per(page_size)
+
         render json: json_response(
-          categories, serializer:,
-                      message: 'Categories retrieved successfully'
+          paginated_categories, serializer:,
+                                message: 'Categories retrieved successfully'
         )
       end
 
-      # GET /api/v1/categories/1
-      # GET /api/v1/categories/1.json
+      # GET /api/v1/categories/:id
+      # GET /api/v1/categories/:id.json
       # Retrieves a specific category by ID
       def show
         # Render the JSON response with the category
@@ -52,11 +49,11 @@ module Api
                                    serializer:), status: :created
       end
 
-      # PATCH/PUT /api/v1/categories/1
-      # PATCH/PUT /api/v1/categories/1.json
+      # PATCH/PUT /api/v1/categories/:id
+      # PATCH/PUT /api/v1/categories/:id.json
       # Updates an existing category
       def update
-        if @category.update(api_v1_category_params)
+        if @category.update!(api_v1_category_params)
           # Render the JSON response with the updated category
           render json: json_response(@category,
                                      serializer:,
@@ -67,8 +64,9 @@ module Api
         end
       end
 
-      # DELETE /api/v1/categories/1
-      # DELETE /api/v1/categories/1.json
+      # DELETE /api/v1/categories/:id
+      # DELETE /api/v1/categories/:id.json
+      #
       # Deletes a specific category by ID
       def destroy
         @category.destroy!
@@ -81,22 +79,16 @@ module Api
         # Reader method for the category instance variable
         attr_reader :category
 
-        # Determines the page size for pagination, ensuring it does not exceed
-        # the maximum limit
-        def page_size
-          [
-            params.fetch(:page_size, MAX_PAGINATION_SIZE).to_i,
-            MAX_PAGINATION_SIZE
-          ].min
-        end
-
         # Sets the category instance variable based on the ID and developer
         # token
         def set_api_v1_category
-          @category = Category.find_by!(
-            id: params[:id],
-            developer_id: developer_token
-          )
+          cache_key = "category/#{params[:id]}_#{developer_id}"
+          @category = Rails.cache.fetch(cache_key, expires_in: 12.hours) do
+            Category.find_by!(
+              id: params[:id],
+              developer_id:
+            )
+          end
         end
 
         # Only allow a list of trusted parameters through.
@@ -105,7 +97,7 @@ module Api
         def api_v1_category_params
           params.require(:category)
                 .permit(:name, :description)
-                .merge(developer_id: developer_token)
+                .merge(developer_id:)
         end
 
         # Returns the serializer class for the category
@@ -115,7 +107,7 @@ module Api
 
         def perform_filtering(categories)
           # Filter categories by developer token
-          categories = categories.where(developer_id: developer_token)
+          categories = categories.where(developer_id:)
 
           # Filter categories by name
           if params[:name].present?
