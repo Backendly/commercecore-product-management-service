@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Product, type: :model do
   let(:developer_id) { UUID7.generate }
   let(:user_id) { UUID7.generate }
+  let(:app_id) { UUID7.generate }
   let(:category) do
     FactoryBot.create(:category, name: 'Home Appliances',
                                  description: 'Home appliance for user needs',
@@ -13,9 +14,12 @@ RSpec.describe Product, type: :model do
 
   it 'throws an error when creating with a nil category_id' do
     expect do
-      Product.create!(name: 'Laptop cases', developer_id:, category_id: nil,
-                      price: 100, user_id:, stock_quantity: 10,
-                      description: 'A case for laptops')
+      Product.create!(
+        name: 'Laptop cases', developer_id:, category_id: nil,
+        price: 100, user_id:, stock_quantity: 10,
+        description: 'A case for laptops',
+        app_id: UUID7.generate
+      )
     end.to raise_error(ActiveRecord::RecordInvalid)
   end
 
@@ -32,7 +36,8 @@ RSpec.describe Product, type: :model do
     product = Product.new(name: 'Laptop cases', developer_id:,
                           category_id: category.id, price: 100, user_id:,
                           stock_quantity: 10,
-                          description: 'A case for laptops' * 3)
+                          description: 'A case for laptops' * 3,
+                          app_id: UUID7.generate)
 
     expect(product).to be_valid
 
@@ -90,7 +95,7 @@ RSpec.describe Product, type: :model do
         Product.create!(name: 'Laptop cases', developer_id:,
                         category_id: category.id, price: 100, user_id:,
                         stock_quantity: 10,
-                        description: 'A case for laptops' * 3)
+                        description: 'A case for laptops' * 3, app_id:)
       end.to_not raise_error
 
       product = Product.first
@@ -101,7 +106,7 @@ RSpec.describe Product, type: :model do
         Product.create!(name: 'Laptop cases', developer_id:,
                         category_id: category.id, price: 100, user_id:,
                         stock_quantity: 10,
-                        description: 'A case for laptops' * 3)
+                        description: 'A case for laptops' * 3, app_id:)
       end.to raise_error(ActiveRecord::RecordNotUnique)
 
       expect(Product.count).to eq(1)
@@ -115,7 +120,8 @@ RSpec.describe Product, type: :model do
         Product.create!(name: 'Laptop cases', developer_id:,
                         category_id: category.id,
                         price: 100, user_id:, stock_quantity: 10,
-                        description: 'A case for laptops' * 3)
+                        description: 'A case for laptops' * 3,
+                        app_id:)
       end.to_not raise_error
       expect(Product.count).to eq(1)
 
@@ -125,7 +131,7 @@ RSpec.describe Product, type: :model do
                         category_id: category.id,
                         price: 100, user_id: second_user_id,
                         stock_quantity: 10,
-                        description: 'A case for laptops' * 3)
+                        description: 'A case for laptops' * 3, app_id:)
       end.to_not raise_error
 
       expect(Product.count).to eq(2)
@@ -144,7 +150,8 @@ RSpec.describe Product, type: :model do
                       category_id: category.id,
                       price: 100, user_id:,
                       stock_quantity: 10,
-                      description: 'A washing machine for user needs' * 4)
+                      description: 'A washing machine for user needs' * 4,
+                      app_id:)
     end
 
     it 'allows deletion of a product' do
@@ -175,7 +182,8 @@ RSpec.describe Product, type: :model do
         name: 'Laptop cases', developer_id:,
         category_id: category.id,
         price: 100, user_id:, stock_quantity: 10,
-        description: 'A case for laptops' * 3
+        description: 'A case for laptops' * 3,
+        app_id:
       )
     end
 

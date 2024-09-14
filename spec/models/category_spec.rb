@@ -203,10 +203,11 @@ RSpec.describe Category, type: :model do
       expect do
         Product.create!(
           name: 'Binatone 3 in 1 Blender', developer_id:,
-          category_id: home_appliance.id, price: 100, user_id: UUID7.generate,
-          stock_quantity: 10,
+          category_id: home_appliance.id, price: 100,
+          user_id: UUID7.generate, stock_quantity: 10,
           description: 'This is an amazing blender for all your ' \
-            'cooking needs in household.'
+            'cooking needs in household.',
+          app_id: UUID7.generate
         )
       end.to_not raise_error
 
