@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require 'requests_helper'
+require 'support/requests_helper'
+require 'support/authentication_helper'
 require 'simplecov'
 
 SimpleCov.start 'rails' do
@@ -121,4 +122,5 @@ RSpec.configure do |config|
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
   config.include RequestsHelper, type: :request
+  config.include AuthenticationHelper, type: :request
 end
