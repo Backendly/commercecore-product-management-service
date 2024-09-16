@@ -185,7 +185,7 @@ RSpec.describe "Api::V1::Products", type: :request do
 
         it 'returns a 401' do
           get api_v1_products_url,
-            headers: { 'X-Developer-Token': UUID7.generate }
+              headers: { 'X-Developer-Token': UUID7.generate }
 
           expect(response).to have_http_status(:unauthorized)
           expect(response_body.dig(:meta, :status_code)).to eq(401)
@@ -193,7 +193,7 @@ RSpec.describe "Api::V1::Products", type: :request do
 
         it 'returns an error message mentioning X-User-Id is missing' do
           get api_v1_products_url,
-            headers: { 'X-Developer-Token': UUID7.generate }
+              headers: { 'X-Developer-Token': UUID7.generate }
 
           expect(response_body.dig(:details, :error)).to eq('Invalid user ID')
           expect(response_body.dig(:details, :message)).to eq(
@@ -238,19 +238,19 @@ RSpec.describe "Api::V1::Products", type: :request do
       context 'with name filter' do
         let!(:filtered_product) do
           FactoryBot.create(:product,
-            name: 'Filtered Product',
-            developer_id: developers.dig(:first, :id),
-            user_id: users.dig(:one, :id),
-            app_id: users.dig(:one, :app_id),
-            price: 100,
-            stock_quantity: 10,
-            description: 'A filtered case' * 10,
-            category_id: nil)
+                            name: 'Filtered Product',
+                            developer_id: developers.dig(:first, :id),
+                            user_id: users.dig(:one, :id),
+                            app_id: users.dig(:one, :app_id),
+                            price: 100,
+                            stock_quantity: 10,
+                            description: 'A filtered case' * 10,
+                            category_id: nil)
         end
 
         it 'returns filtered products by name' do
           get api_v1_products_url, headers: valid_headers[:first_dev],
-            params: { name: 'Filtered Product' }
+                                   params: { name: 'Filtered Product' }
 
           expect(response).to have_http_status(:success)
           expect(response_body[:data].size).to eq(1)
@@ -262,8 +262,8 @@ RSpec.describe "Api::V1::Products", type: :request do
       context 'with category filter' do
         it 'returns filtered products by category' do
           get api_v1_products_url,
-            headers: valid_headers[:first_dev],
-            params: { category_id: first_dev_category_kitchen.id }
+              headers: valid_headers[:first_dev],
+              params: { category_id: first_dev_category_kitchen.id }
 
           expect(response).to have_http_status(:success)
           expect(response_body[:data].size).to eq(3)
@@ -279,31 +279,31 @@ RSpec.describe "Api::V1::Products", type: :request do
       context 'with price range filter' do
         let!(:cheap_price) do
           FactoryBot.create(:product,
-            name: 'Cheap Product',
-            developer_id: developers.dig(:first, :id),
-            user_id: users.dig(:one, :id),
-            app_id: users.dig(:one, :app_id),
-            price: 5,
-            stock_quantity: 10,
-            description: 'A cheap product ' * 4,
-            category_id: first_dev_category_kitchen.id)
+                            name: 'Cheap Product',
+                            developer_id: developers.dig(:first, :id),
+                            user_id: users.dig(:one, :id),
+                            app_id: users.dig(:one, :app_id),
+                            price: 5,
+                            stock_quantity: 10,
+                            description: 'A cheap product ' * 4,
+                            category_id: first_dev_category_kitchen.id)
         end
 
         let!(:expensive_price) do
           FactoryBot.create(:product,
-            name: 'Expensive Product',
-            developer_id: developers.dig(:first, :id),
-            user_id: users.dig(:one, :id),
-            app_id: users.dig(:one, :app_id),
-            price: 15,
-            stock_quantity: 10,
-            description: 'An expensive product ' * 4,
-            category_id: first_dev_category_kitchen.id)
+                            name: 'Expensive Product',
+                            developer_id: developers.dig(:first, :id),
+                            user_id: users.dig(:one, :id),
+                            app_id: users.dig(:one, :app_id),
+                            price: 15,
+                            stock_quantity: 10,
+                            description: 'An expensive product ' * 4,
+                            category_id: first_dev_category_kitchen.id)
         end
 
         it 'returns products within the specified price range' do
           get api_v1_products_url, headers: valid_headers[:first_dev],
-            params: { min_price: 5, max_price: 10 }
+                                   params: { min_price: 5, max_price: 10 }
 
           expect(response).to have_http_status(:success)
           expect(response_body[:data].size).to eq(1)
@@ -341,7 +341,7 @@ RSpec.describe "Api::V1::Products", type: :request do
 
       it 'caches the product response with filters' do
         get api_v1_products_url, headers: valid_headers[:first_dev],
-          params: { name: 'Microwave' }
+                                 params: { name: 'Microwave' }
 
         expect(response).to have_http_status(:ok)
         expect(Rails.cache).to have_received(:fetch)
@@ -361,7 +361,7 @@ RSpec.describe "Api::V1::Products", type: :request do
 
     let!(:product) do
       Product.find_by(developer_id: developers.dig(:first, :id),
-        app_id: users.dig(:one, :app_id))
+                      app_id: users.dig(:one, :app_id))
     end
 
     it "renders a successful response" do
@@ -403,14 +403,14 @@ RSpec.describe "Api::V1::Products", type: :request do
     context 'errors' do
       it 'returns a 404 status code for non-existent products' do
         get api_v1_product_url(UUID7.generate),
-          headers: valid_headers[:first_dev]
+            headers: valid_headers[:first_dev]
 
         expect(response).to have_http_status(404)
       end
 
       it 'returns the expected response body format for errors' do
         get api_v1_product_url(UUID7.generate),
-          headers: valid_headers[:first_dev]
+            headers: valid_headers[:first_dev]
 
         expect(response_body.keys).to contain_exactly(
           :error, :meta, :details
@@ -429,7 +429,7 @@ RSpec.describe "Api::V1::Products", type: :request do
 
     it 'returns a JSON response' do
       get api_v1_product_url(UUID7.generate),
-        headers: valid_headers[:first_dev]
+          headers: valid_headers[:first_dev]
       expect(response.content_type).to include('application/json')
     end
   end
@@ -448,23 +448,23 @@ RSpec.describe "Api::V1::Products", type: :request do
       it "creates a new Product" do
         expect do
           post api_v1_products_url,
-            params: { product: valid_attributes[:product_one] },
-            headers: valid_headers[:first_dev], as: :json
+               params: { product: valid_attributes[:product_one] },
+               headers: valid_headers[:first_dev], as: :json
         end.to change(Product, :count).by(1)
       end
 
       it 'returns a 201 status code' do
         post api_v1_products_url,
-          params: { product: valid_attributes[:product_one] },
-          headers: valid_headers[:first_dev], as: :json
+             params: { product: valid_attributes[:product_one] },
+             headers: valid_headers[:first_dev], as: :json
 
         expect(response).to have_http_status(:created)
       end
 
       it "renders a JSON response with the new product" do
         post api_v1_products_url,
-          params: { product: valid_attributes[:product_one] },
-          headers: valid_headers[:first_dev], as: :json
+             params: { product: valid_attributes[:product_one] },
+             headers: valid_headers[:first_dev], as: :json
 
         expect(response).to have_http_status(:created)
         expect(response.content_type).to include("application/json")
@@ -477,8 +477,8 @@ RSpec.describe "Api::V1::Products", type: :request do
           )
 
           post api_v1_products_url,
-            params: { product: },
-            headers: valid_headers[:first_dev], as: :json
+               params: { product: },
+               headers: valid_headers[:first_dev], as: :json
 
           expect(response).to have_http_status(400)
         end
@@ -489,8 +489,8 @@ RSpec.describe "Api::V1::Products", type: :request do
           )
 
           post api_v1_products_url,
-            params: { product: },
-            headers: valid_headers[:first_dev], as: :json
+               params: { product: },
+               headers: valid_headers[:first_dev], as: :json
 
           expect(response.content_type).to include("application/json")
         end
@@ -501,8 +501,8 @@ RSpec.describe "Api::V1::Products", type: :request do
           )
 
           post api_v1_products_url,
-            params: { product: },
-            headers: valid_headers[:first_dev], as: :json
+               params: { product: },
+               headers: valid_headers[:first_dev], as: :json
 
           expect(response_body.dig(:details, :message)).to \
             include('Verify you have the category you specified')
@@ -516,33 +516,33 @@ RSpec.describe "Api::V1::Products", type: :request do
       it "does not create a new Product" do
         expect do
           post api_v1_products_url,
-            headers: valid_headers[:first_dev],
-            params: { product: invalid_attributes }, as: :json
+               headers: valid_headers[:first_dev],
+               params: { product: invalid_attributes }, as: :json
         end.not_to change(Product, :count)
       end
 
       it "renders a JSON response with errors for the new product" do
         post api_v1_products_url,
-          params: { product: invalid_attributes },
-          headers: valid_headers[:first_dev], as: :json
+             params: { product: invalid_attributes },
+             headers: valid_headers[:first_dev], as: :json
         expect(response).to have_http_status(:unprocessable_content)
         expect(response.content_type).to include("application/json")
       end
 
       it 'returns a 422 when the product price is not provided' do
         post api_v1_products_url,
-          params: { product: invalid_attributes[:product_with_no_price] },
-          headers: valid_headers[:first_dev], as: :json
+             params: { product: invalid_attributes[:product_with_no_price] },
+             headers: valid_headers[:first_dev], as: :json
 
         expect(response).to have_http_status(422)
       end
 
       it 'returns a 422 when the price is a not a numeric value' do
         post api_v1_products_url,
-          params: {
-            product: invalid_attributes[:product_with_non_numeric_price]
-          },
-          headers: valid_headers[:first_dev], as: :json
+             params: {
+               product: invalid_attributes[:product_with_non_numeric_price]
+             },
+             headers: valid_headers[:first_dev], as: :json
 
         expect(response).to have_http_status(:unprocessable_content)
       end
@@ -552,12 +552,12 @@ RSpec.describe "Api::V1::Products", type: :request do
       it "returns a 422 status code for each invalid attribute set" do
         invalid_attributes.each do |key, value|
           post api_v1_products_url,
-            params: { product: value },
-            headers: valid_headers[:first_dev], as: :json
+               params: { product: value },
+               headers: valid_headers[:first_dev], as: :json
 
           expect(response).to have_http_status(422),
-            "Expected 422 for #{key} but got" \
-              " #{response.status}"
+                              "Expected 422 for #{key} but got" \
+                                " #{response.status}"
         end
       end
     end
@@ -579,16 +579,16 @@ RSpec.describe "Api::V1::Products", type: :request do
 
       it "updates the requested product" do
         patch api_v1_product_url(product),
-          params: { product: new_attributes },
-          headers: valid_headers[:first_dev], as: :json
+              params: { product: new_attributes },
+              headers: valid_headers[:first_dev], as: :json
         product.reload
         expect(product.name).to eq(new_attributes[:name])
       end
 
       it "renders a JSON response with the product" do
         patch api_v1_product_url(product),
-          params: { product: new_attributes },
-          headers: valid_headers[:first_dev], as: :json
+              params: { product: new_attributes },
+              headers: valid_headers[:first_dev], as: :json
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to include("application/json")
       end
@@ -610,20 +610,20 @@ RSpec.describe "Api::V1::Products", type: :request do
     it "destroys the requested product" do
       expect do
         delete api_v1_product_url(product),
-          headers: valid_headers[:first_dev], as: :json
+               headers: valid_headers[:first_dev], as: :json
       end.to change(Product, :count).by(-1)
     end
 
     it 'returns a 204 status code' do
       delete api_v1_product_url(product),
-        headers: valid_headers[:first_dev], as: :json
+             headers: valid_headers[:first_dev], as: :json
 
       expect(response).to have_http_status(:no_content)
     end
 
     it 'returns no content in the response body' do
       delete api_v1_product_url(product),
-        headers: valid_headers[:first_dev], as: :json
+             headers: valid_headers[:first_dev], as: :json
 
       expect(response.body).to be_empty
     end

@@ -27,14 +27,14 @@ module Api
         products = products.by_name(params[:name])
                            .by_category(params[:category_id])
                            .by_price_range(params[:min_price],
-                             params[:max_price])
+                                           params[:max_price])
 
         # Set the cache key based on the filtered products
         cache_key = products_cache_key(developer_id:, page:, page_size:,
-          name: params[:name],
-          category_id: params[:category_id],
-          min_price: params[:min_price],
-          max_price: params[:max_price])
+                                       name: params[:name],
+                                       category_id: params[:category_id],
+                                       min_price: params[:min_price],
+                                       max_price: params[:max_price])
 
         # Fetch or cache the response
         response = Rails.cache.fetch(cache_key, expires_in: 2.hours) do
@@ -112,7 +112,7 @@ module Api
         def product_params
           params.require(:product)
                 .permit(:name, :description, :price, :category_id, :available,
-                  :currency, :stock_quantity)
+                        :currency, :stock_quantity)
                 .merge(developer_id:, user_id:, app_id:)
         end
 
@@ -148,7 +148,7 @@ module Api
         # Generates a cache key for product pagination based on developer ID
         # and page info.
         def products_cache_key(developer_id:, page:, page_size:, name: nil,
-          category_id: nil, min_price: nil, max_price: nil)
+                               category_id: nil, min_price: nil, max_price: nil)
 
           key_parts = %W[developer_#{developer_id} page_#{page}
                          size-#{page_size}]

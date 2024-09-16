@@ -2,7 +2,7 @@
 
 module AuthenticationHelper
   def mock_authentication(controller_class:, developer_id: nil, user_id: nil,
-    app_id: nil)
+                          app_id: nil)
     allow_any_instance_of(UserServiceClient).to \
       receive(:fetch_developer_id).and_return(developer_id)
 
