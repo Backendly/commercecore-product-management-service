@@ -20,11 +20,11 @@ RSpec.shared_context 'common data' do
     {
       one: {
         id: '0191effe-d200-7a69-885c-d38cf8dd855b',
-        app_id: developers.dig(:one, :id)
+        app_id: developers.dig(:first, :app_id)
       },
       two: {
         id: '0191efff-0a87-7850-9096-cbbf17145710',
-        app_id: developers.dig(:two, :id)
+        app_id: developers.dig(:first, :app_id)
       }
     }
   end
