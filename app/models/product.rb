@@ -4,10 +4,23 @@
 class Product < ApplicationRecord
   include WordCountValidatable
 
-  belongs_to :category
+  scope :by_name, lambda { |name|
+    where('name ILIKE ?', "%#{name}%") if name.present?
+  }
+  scope :by_category, lambda { |category_id|
+    where(category_id:) if category_id.present?
+  }
+  scope :by_price_range, lambda { |min_price, max_price|
+    if min_price.present? && max_price.present?
+      where(price: min_price..max_price)
+    end
+  }
 
-  validates :developer_id, :name, :category_id, :price, :user_id,
-            :stock_quantity, :description, presence: true
+  belongs_to :category, optional: true
+
+  validates :developer_id, :name, :price, :user_id, :app_id,
+            :stock_quantity, :description, :currency, presence: true
+  validates :available, inclusion: { in: [true, false] }
 
   validate :price_must_be_numeric
   validates :stock_quantity, numericality: { only_integer: true }
