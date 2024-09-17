@@ -23,7 +23,11 @@ class Product < ApplicationRecord
             content_type: {
               in: %w[image/png image/jpg image/jpeg images/webp]
             }
-  validates :images, size: { max_size: 2.megabytes }
+  validates :images,
+            size: {
+              max_size: 2.megabytes,
+              message: 'size must be less than 2MB'
+            }
 
   validates :developer_id, :name, :price, :user_id, :app_id,
             :stock_quantity, :description, :currency, presence: true
