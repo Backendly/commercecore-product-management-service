@@ -17,6 +17,13 @@ class Product < ApplicationRecord
   }
 
   belongs_to :category, optional: true
+  has_many_attached :images
+
+  validates :images,
+            content_type: {
+              in: %w[image/png image/jpg image/jpeg images/webp]
+            }
+  validates :images, size: { max_size: 2.megabytes }
 
   validates :developer_id, :name, :price, :user_id, :app_id,
             :stock_quantity, :description, :currency, presence: true
