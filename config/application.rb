@@ -50,5 +50,7 @@ module CommercecoreProductManagementService
     end
 
     config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] }
+
+    config.autoload_paths += %W[#{config.root}/app/validators]
   end
 end
