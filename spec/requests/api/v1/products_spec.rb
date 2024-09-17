@@ -330,16 +330,16 @@ RSpec.describe "Api::V1::Products", type: :request do
         allow(Product).to receive(:where).and_call_original
       end
 
+      let(:cache_key) do
+        "developer_#{developers.dig(:first, :id)}_page_1_size-100"
+      end
+
       it 'caches the product response' do
         get api_v1_products_url, headers: valid_headers[:first_dev]
 
         expect(response).to have_http_status(:ok)
         expect(Rails.cache).to have_received(:fetch)
-          .with(
-            "developer_#{developers.dig(:first,
-                                        :id)}_page_1_size-100",
-            expires_in: 2.hours
-          )
+          .with(cache_key, expires_in: 2.hours)
       end
 
       it 'caches the product response with filters' do
@@ -348,11 +348,7 @@ RSpec.describe "Api::V1::Products", type: :request do
 
         expect(response).to have_http_status(:ok)
         expect(Rails.cache).to have_received(:fetch)
-          .with(
-            "developer_#{developers.dig(:first, :id)}" \
-              "_page_1_size-100_name-Microwave",
-            expires_in: 2.hours
-          )
+          .with("#{cache_key}_name-Microwave", expires_in: 2.hours)
       end
     end
   end
@@ -710,6 +706,12 @@ RSpec.describe "Api::V1::Products", type: :request do
 
         expect(response_body[:details]).to be_a(Hash)
         expect(response_body[:details].keys).to contain_exactly(:message)
+
+        # check the validity of the type of the error message
+        expect(response_body[:error]).to eq('Product not found')
+        expect(response_body[:details][:message]).to include(
+          "Couldn't find Product with id"
+        )
       end
 
       it 'fails for non-image files' do
@@ -735,7 +737,7 @@ RSpec.describe "Api::V1::Products", type: :request do
         expect(product.images.count).to eq(0)
         expect(response).to have_http_status(:unprocessable_content)
 
-        expect(response_body[:details].first).to include("is too large")
+        expect(response_body[:details].first).to include("must be less than")
       end
     end
 
