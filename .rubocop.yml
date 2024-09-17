@@ -19,6 +19,7 @@ Metrics/BlockLength:
 Metrics/MethodLength:
   Exclude:
     - 'spec/**/*'
+    - 'db/**/*'
 
 Metrics/ClassLength:
   Exclude:
@@ -34,3 +35,7 @@ Layout/LineLength:
 Style/Documentation:
   Exclude:
     - db/**/*
+
+Metrics/AbcSize:
+  Exclude:
+    - 'db/**/*'
