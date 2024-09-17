@@ -29,14 +29,14 @@ class SizeValidator < ActiveModel::EachValidator
     return if value.nil? || !value.respond_to?(:each)
 
     value.each do |file|
-      unless file.respond_to?(:byte_size) && file.byte_size > options[:max_size]
+      unless file.respond_to?(:byte_size) &&
+             file.byte_size > options[:max_size]
         next
       end
 
-      record.errors.add(
-        attribute,
-        "is too large. Maximum size allowed is #{options[:max_size]} bytes."
-      )
+      message = options[:message] || 'is too large. Maximum size allowed ' \
+        "is #{options[:max_size]} bytes."
+      record.errors.add(attribute, message)
     end
   end
 end
