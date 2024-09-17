@@ -2,5 +2,7 @@
 
 FactoryBot.define do
   factory :category do
+    name { "Electronics" }
+    description { "Electronics and gadgets category" }
   end
 end
