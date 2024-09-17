@@ -316,8 +316,6 @@ RSpec.describe "Api::V1::Products", type: :request do
     end
 
     describe 'caching' do
-      let!(:expected_developer_id) { developers.dig(:first, :id) }
-
       before do
         mock_authentication(
           controller_class: Api::V1::ProductsController,
@@ -337,6 +335,11 @@ RSpec.describe "Api::V1::Products", type: :request do
 
         expect(response).to have_http_status(:ok)
         expect(Rails.cache).to have_received(:fetch)
+          .with(
+            "developer_#{developers.dig(:first,
+                                        :id)}_page_1_size-100",
+            expires_in: 2.hours
+          )
       end
 
       it 'caches the product response with filters' do
@@ -345,6 +348,11 @@ RSpec.describe "Api::V1::Products", type: :request do
 
         expect(response).to have_http_status(:ok)
         expect(Rails.cache).to have_received(:fetch)
+          .with(
+            "developer_#{developers.dig(:first, :id)}" \
+              "_page_1_size-100_name-Microwave",
+            expires_in: 2.hours
+          )
       end
     end
   end
@@ -626,6 +634,165 @@ RSpec.describe "Api::V1::Products", type: :request do
              headers: valid_headers[:first_dev], as: :json
 
       expect(response.body).to be_empty
+    end
+  end
+
+  describe 'Product Images' do
+    before do
+      mock_authentication(
+        controller_class: Api::V1::ProductsController,
+        developer_id: developers.dig(:first, :id),
+        user_id: users.dig(:one, :id),
+        app_id: users.dig(:one, :app_id)
+      )
+    end
+
+    let(:product) { Product.first }
+    let(:image1) do
+      fixture_file_upload(
+        Rails.root.join("spec/fixtures/files/product_image_1.png")
+      )
+    end
+    let(:image2) do
+      fixture_file_upload(
+        Rails.root.join("spec/fixtures/files/product_image_2.jpg")
+      )
+    end
+    let(:image3) do
+      fixture_file_upload(
+        Rails.root.join("spec/fixtures/files/product_image_3.jpg")
+      )
+    end
+    let(:large_file) do
+      fixture_file_upload(
+        Rails.root.join("spec/fixtures/files/large_image.jpg")
+      )
+    end
+    let(:invalid_image) do
+      fixture_file_upload(
+        Rails.root.join("spec/fixtures/files/just_text.txt")
+      )
+    end
+
+    context "when adding images to products" do
+      it 'attaches an image to a product' do
+        product = Product.first
+
+        post upload_images_api_v1_product_url(product),
+             params: { images: [image1, image2, image3] },
+             headers: valid_headers[:first_dev]
+
+        expect(product.images.attached?).to be_truthy
+        expect(product.images.count).to eq(3)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns a 404 status code for non-existent products' do
+        post upload_images_api_v1_product_url(UUID7.generate),
+             headers: valid_headers[:first_dev]
+
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns the expected response body format for errors' do
+        post upload_images_api_v1_product_url(UUID7.generate),
+             headers: valid_headers[:first_dev]
+
+        expect(response_body.keys).to contain_exactly(
+          :error, :meta, :details
+        )
+        expect(response_body[:error]).to be_a(String)
+
+        expect(response_body[:meta]).to be_a(Hash)
+        expect(response_body[:meta].keys).to contain_exactly(
+          :request_path, :request_method, :status_code, :success
+        )
+
+        expect(response_body[:details]).to be_a(Hash)
+        expect(response_body[:details].keys).to contain_exactly(:message)
+      end
+
+      it 'fails for non-image files' do
+        product = Product.first
+
+        post upload_images_api_v1_product_url(product),
+             params: { images: [invalid_image] },
+             headers: valid_headers[:first_dev]
+
+        expect(product.images.attached?).to be_falsey
+        expect(product.images.count).to eq(0)
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it 'fails for images that exceed the maximum size' do
+        product = Product.first
+
+        post upload_images_api_v1_product_url(product),
+             params: { images: [large_file] },
+             headers: valid_headers[:first_dev]
+
+        expect(product.images.attached?).to be_falsey
+        expect(product.images.count).to eq(0)
+        expect(response).to have_http_status(:unprocessable_content)
+
+        expect(response_body[:details].first).to include("is too large")
+      end
+    end
+
+    context "when deleting images from products" do
+      it 'deletes an image from a product' do
+        product.images.attach(image1)
+
+        delete delete_image_api_v1_product_url(product, product.images.first),
+               headers: valid_headers[:first_dev]
+
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'returns a 404 status code for non-existent products' do
+        delete delete_image_api_v1_product_url(UUID7.generate, UUID7.generate),
+               headers: valid_headers[:first_dev]
+
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'returns a 404 status code for non-existent images' do
+        product = Product.first
+
+        delete delete_image_api_v1_product_url(product, UUID7.generate),
+               headers: valid_headers[:first_dev]
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context "when listing products" do
+      it 'returns a list of images for a product' do
+        product.images.attach(image1, image2, image3)
+
+        get api_v1_product_url(product),
+            headers: valid_headers[:first_dev]
+
+        expect(response).to have_http_status(:success)
+        expect(response_body.dig(:data, :attributes, :images).size).to eq(3)
+      end
+
+      it 'returns a 404 status code for non-existent products' do
+        get api_v1_product_url(UUID7.generate),
+            headers: valid_headers[:first_dev]
+
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'returns an empty array for products with no images' do
+        product = Product.last
+
+        get api_v1_product_url(product),
+            headers: valid_headers[:first_dev]
+
+        expect(response).to have_http_status(:success)
+        expect(response_body.dig(:data, :attributes, :images)).to be_empty
+      end
     end
   end
 end
