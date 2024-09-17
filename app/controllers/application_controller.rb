@@ -15,7 +15,7 @@ class ApplicationController < ActionController::API
   # rubocop:disable Metrics/MethodLength
 
   # Renders a JSON error response
-  def render_error(error:, status:, details: nil, meta: {})
+  def render_error(status:, error: 'An error occurred', details: nil, meta: {})
     numeric_status_code = Rack::Utils.status_code(status)
     success = false
 

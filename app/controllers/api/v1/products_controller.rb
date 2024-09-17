@@ -6,8 +6,11 @@ module Api
 
     # Handles CRUD operations for products
     class ProductsController < ApplicationController
-      before_action :set_product, only: %i[show update destroy]
-      after_action :invalidate_cache, only: %i[update destroy]
+      before_action :set_product,
+                    only: %i[show update destroy upload_images delete_image]
+      before_action :set_product_image, only: %i[delete_image]
+      after_action :invalidate_cache,
+                   only: %i[update destroy upload_images delete_image]
 
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/AbcSize
@@ -96,6 +99,20 @@ module Api
         head :no_content
       end
 
+      def upload_images
+        if @product.images.attach(image_params)
+          render json: { message: 'Images uploaded successfully' }
+        else
+          render_error(details: @product.errors.full_messages,
+                       status: :unprocessable_content)
+        end
+      end
+
+      def delete_image
+        @product_image.purge_later
+        render json: { message: 'Image deleted successfully' }, status: :ok
+      end
+
       private
 
         # Sets the product instance variable based on the provided ID and
@@ -114,6 +131,20 @@ module Api
                 .permit(:name, :description, :price, :category_id, :available,
                         :currency, :stock_quantity)
                 .merge(developer_id:, user_id:, app_id:)
+        end
+
+        def image_params
+          params.require(:images)
+        end
+
+        def set_product_image
+          @product_image = @product.images.find_by!(id: params[:image_id])
+          return unless @product_image.nil?
+
+          render_error(
+            error: 'Image not found',
+            status: :not_found
+          )
         end
 
         # Returns the serializer class for the product.
