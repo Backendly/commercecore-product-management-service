@@ -47,6 +47,8 @@ group :development, :test do
 
   # code coverage
   gem 'simplecov', require: false
+
+  gem 'faker'
 end
 
 gem 'uuid7', '~> 0.2.0'
