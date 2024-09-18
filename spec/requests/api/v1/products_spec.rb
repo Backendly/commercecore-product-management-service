@@ -180,7 +180,9 @@ RSpec.describe "Api::V1::Products", type: :request do
       context 'with a X-Developer-Token header but not X-User-Id header' do
         before do
           allow_any_instance_of(UserServiceClient).to \
-            receive(:fetch_developer_id).and_return(developers.dig(:first, :id))
+            receive(:fetch_developer_id).and_return(
+              developers.dig(:first, :id)
+            )
         end
 
         it 'returns a 401' do
@@ -309,8 +311,9 @@ RSpec.describe "Api::V1::Products", type: :request do
           expect(response_body[:data].size).to eq(1)
           expect(response_body[:data].first.dig(:attributes, :name)).to \
             eq('Cheap Product')
-          expect(response_body[:data].first.dig(:attributes, :price).to_i).to \
-            eq(5)
+          expect(response_body[:data].first.dig(
+            :attributes, :price
+          ).to_i).to eq(5)
         end
       end
     end
@@ -330,16 +333,19 @@ RSpec.describe "Api::V1::Products", type: :request do
         allow(Product).to receive(:where).and_call_original
       end
 
-      let(:cache_key) do
-        "developer_#{developers.dig(:first, :id)}_page_1_size-100"
-      end
+      let(:base_key) { 'api/v1/products_controller' }
+      let(:page) { 1 }
+      let(:page_size) { 100 }
 
       it 'caches the product response' do
         get api_v1_products_url, headers: valid_headers[:first_dev]
 
         expect(response).to have_http_status(:ok)
         expect(Rails.cache).to have_received(:fetch)
-          .with(cache_key, expires_in: 2.hours)
+          .with(
+            "#{base_key}_page_#{page}_size_#{page_size}",
+            expires_in: 2.hours
+          )
       end
 
       it 'caches the product response with filters' do
@@ -348,7 +354,10 @@ RSpec.describe "Api::V1::Products", type: :request do
 
         expect(response).to have_http_status(:ok)
         expect(Rails.cache).to have_received(:fetch)
-          .with("#{cache_key}_name-Microwave", expires_in: 2.hours)
+          .with(
+            "#{base_key}_page_#{page}_size_#{page_size}_name_Microwave",
+            expires_in: 2.hours
+          )
       end
     end
   end

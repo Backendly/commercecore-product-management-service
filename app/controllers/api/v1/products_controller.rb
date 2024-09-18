@@ -9,8 +9,6 @@ module Api
       before_action :set_product,
                     only: %i[show update destroy upload_images delete_image]
       before_action :set_product_image, only: %i[delete_image]
-      after_action :invalidate_cache,
-                   only: %i[update destroy upload_images delete_image]
 
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/AbcSize
@@ -23,29 +21,27 @@ module Api
 
         # Initialize the products query with developer_id and app_id
         products = Product.where(developer_id:, app_id:)
+                          .by_name(params[:name])
+                          .by_category(params[:category_id])
+                          .by_price_range(params[:min_price],
+                                          params[:max_price])
                           .page(page)
                           .per(page_size)
 
-        # Apply filtering based on query parameters
-        products = products.by_name(params[:name])
-                           .by_category(params[:category_id])
-                           .by_price_range(params[:min_price],
-                                           params[:max_price])
-
-        # Set the cache key based on the filtered products
-        cache_key = products_cache_key(developer_id:, page:, page_size:,
-                                       name: params[:name],
-                                       category_id: params[:category_id],
-                                       min_price: params[:min_price],
-                                       max_price: params[:max_price])
-
-        # Fetch or cache the response
-        response = Rails.cache.fetch(cache_key, expires_in: 2.hours) do
-          products_array = products.to_a
+        # Cache the collection of products
+        response = cache_collection(
+          products, base_key,
+          page:, page_size:,
+          filters: {
+            name: params[:name],
+            category_id: params[:category_id],
+            min_price: params[:min_price],
+            max_price: params[:max_price]
+          }
+        ) do |collection|
           json_response(
-            products_array,
-            message: 'Products retrieved successfully',
-            serializer:
+            collection, message: 'Products retrieved successfully',
+                        serializer: ProductSerializer
           )
         end
 
@@ -60,8 +56,8 @@ module Api
       def show
         render json: json_response(
           @product,
-          serializer:,
-          message: 'Product retrieved successfully'
+          message: 'Product retrieved successfully',
+          serializer:
         )
       end
 
@@ -87,8 +83,8 @@ module Api
 
         render json: json_response(
           @product,
-          serializer:,
-          message: 'Product updated successfully'
+          message: 'Product updated successfully',
+          serializer:
         )
       end
 
@@ -99,6 +95,7 @@ module Api
         head :no_content
       end
 
+      # Uploads images to the product.
       def upload_images
         if @product.images.attach(image_params)
           render json: { message: 'Images uploaded successfully' }
@@ -108,6 +105,7 @@ module Api
         end
       end
 
+      # Deletes a specific image from the product.
       def delete_image
         @product_image.purge_later
         render json: { message: 'Image deleted successfully' }, status: :ok
@@ -120,7 +118,7 @@ module Api
         # to @product. If not found or the cached product is stale, it is
         # fetched from the database.
         def set_product
-          @product = Rails.cache.fetch(cache_key, expires_in: 2.hours) do
+          @product = cache_resource(current_cache_key) do
             Product.find_by!(id: params[:id], developer_id:, app_id:)
           end
         end
@@ -128,23 +126,15 @@ module Api
         # Strong parameters for product creation and updates.
         def product_params
           params.require(:product)
-                .permit(:name, :description, :price, :category_id, :available,
-                        :currency, :stock_quantity)
-                .merge(developer_id:, user_id:, app_id:)
+                .permit(
+                  :name, :description, :price, :category_id, :available,
+                  :currency, :stock_quantity
+                ).merge(developer_id:, user_id:, app_id:)
         end
 
+        # Strong parameters for product image creation.
         def image_params
           params.require(:images)
-        end
-
-        def set_product_image
-          @product_image = @product.images.find_by!(id: params[:image_id])
-          return unless @product_image.nil?
-
-          render_error(
-            error: 'Image not found',
-            status: :not_found
-          )
         end
 
         # Returns the serializer class for the product.
@@ -174,43 +164,15 @@ module Api
           end
         end
 
-        # rubocop:disable Metrics/ParameterLists
+        # Sets the product image based on the provided ID.
+        def set_product_image
+          @product_image = @product.images.find_by!(id: params[:image_id])
+          return unless @product_image.nil?
 
-        # Generates a cache key for product pagination based on developer ID
-        # and page info.
-        def products_cache_key(developer_id:, page:, page_size:, name: nil,
-                               category_id: nil, min_price: nil, max_price: nil)
-
-          key_parts = %W[developer_#{developer_id} page_#{page}
-                         size-#{page_size}]
-
-          key_parts << "name-#{name}" if name.present?
-          key_parts << "category_id-#{category_id}" if category_id.present?
-          key_parts << "min_price-#{min_price}" if min_price.present?
-          key_parts << "max_price-#{max_price}" if max_price.present?
-
-          key_parts.join('_')
-        end
-
-        # rubocop:enable Metrics/ParameterLists
-
-        # Generates the cache key for the specific product.
-        def cache_key
-          "product_#{params[:id]}_#{developer_id}"
-        end
-
-        # Invalidates the cache for the product and its updated_at timestamp.
-        def invalidate_cache
-          Rails.cache.delete(cache_key)
-          Rails.cache.delete(updated_at_cache_key)
-        end
-
-        # Generates the cache key for the product's updated_at timestamp.
-        def updated_at_cache_key
-          "#{cache_key}_updated_at"
+          render_error(error: 'Image not found', status: :not_found)
         end
     end
-  end
 
-  # rubocop:enable Metrics/ClassLength
+    # rubocop:enable Metrics/ClassLength
+  end
 end

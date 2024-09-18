@@ -4,6 +4,7 @@
 class ApplicationController < ActionController::API
   include Authentication
   include JsonResponse
+  include Cacheable
 
   rescue_from ActiveRecord::RecordNotFound, with: :object_not_found
   rescue_from ActiveRecord::RecordNotUnique, with: :duplicate_object

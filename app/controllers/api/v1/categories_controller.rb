@@ -6,32 +6,52 @@ module Api
     # This controller handles CRUD operations for categories.
     class CategoriesController < ApplicationController
       # Before actions to set up authorization and category object
-      before_action :set_api_v1_category, only: %i[show update destroy]
+      before_action :set_category, only: %i[show update destroy]
+
+      # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
 
       # GET /api/v1/categories
       # GET /api/v1/categories.json
       # Retrieves a paginated list of categories filtered by developer token
       def index
-        categories = Category.all
+        categories = Category.by_developer(developer_id)
+                             .by_name(params[:name])
+                             .by_search(params[:search])
+                             .page(params[:page])
+                             .per(page_size)
 
-        categories = perform_filtering(categories)
+        # implement caching for the collection of categories
+        response = cache_collection(
+          categories, base_key,
+          page: params[:page],
+          page_size:,
+          filters: {
+            name: params[:name],
+            search: params[:search]
+          }
+        ) do |collection|
+          json_response(
+            collection,
+            message: 'Categories retrieved successfully',
+            serializer:
+          )
+        end
 
-        paginated_categories = categories.page(params[:page]).per(page_size)
-
-        render json: json_response(
-          paginated_categories, serializer:,
-                                message: 'Categories retrieved successfully'
-        )
+        render json: response
       end
+
+      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
 
       # GET /api/v1/categories/:id
       # GET /api/v1/categories/:id.json
       # Retrieves a specific category by ID
       def show
-        # Render the JSON response with the category
         render json: json_response(
-          category, serializer:,
-                    message: 'Category retrieved successfully'
+          category,
+          message: 'Category retrieved successfully',
+          serializer:
         )
       end
 
@@ -39,9 +59,7 @@ module Api
       # POST /api/v1/categories.json
       # Creates a new category
       def create
-        @category = Category.new(api_v1_category_params)
-
-        @category.save! # Raise an error when the category could not be saved
+        @category = Category.create!(category_params)
 
         # Render the JSON response with the created category
         render json: json_response(@category,
@@ -53,7 +71,7 @@ module Api
       # PATCH/PUT /api/v1/categories/:id.json
       # Updates an existing category
       def update
-        if @category.update!(api_v1_category_params)
+        if @category.update!(category_params)
           # Render the JSON response with the updated category
           render json: json_response(@category,
                                      serializer:,
@@ -81,20 +99,16 @@ module Api
 
         # Sets the category instance variable based on the ID and developer
         # token
-        def set_api_v1_category
-          cache_key = "category/#{params[:id]}_#{developer_id}"
-          @category = Rails.cache.fetch(cache_key, expires_in: 12.hours) do
-            Category.find_by!(
-              id: params[:id],
-              developer_id:
-            )
+        def set_category
+          @category = cache_resource(current_cache_key, expires_in: 12.hours) do
+            Category.find_by!(id: params[:id], developer_id:)
           end
         end
 
         # Only allow a list of trusted parameters through.
         # Permits the name and description parameters and merges the developer
         # token
-        def api_v1_category_params
+        def category_params
           params.require(:category)
                 .permit(:name, :description)
                 .merge(developer_id:)

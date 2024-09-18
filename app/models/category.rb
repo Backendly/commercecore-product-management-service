@@ -15,4 +15,17 @@ class Category < ApplicationRecord
 
   validates_word_count_of :description, min_words: 2, max_words: 10
   validates_word_count_of :name, min_words: 1, max_words: 10
+
+  scope :by_developer, ->(developer_id) { where(developer_id:) }
+  scope :by_name, lambda { |name|
+    where('name ILIKE ?', "%#{name}%") if name.present?
+  }
+  scope :by_search, lambda { |search|
+    if search.present?
+      where(
+        'name ILIKE :search OR description ILIKE :search',
+        search: "%#{search}%"
+      )
+    end
+  }
 end
