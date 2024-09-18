@@ -333,7 +333,9 @@ RSpec.describe "Api::V1::Products", type: :request do
         allow(Product).to receive(:where).and_call_original
       end
 
-      let(:base_key) { 'api/v1/products_controller' }
+      let(:base_key) do
+        "api/v1/products_controller_dev_id_#{developers.dig(:first, :id)}"
+      end
       let(:page) { 1 }
       let(:page_size) { 100 }
 

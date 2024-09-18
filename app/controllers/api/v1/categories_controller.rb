@@ -15,10 +15,12 @@ module Api
       # GET /api/v1/categories.json
       # Retrieves a paginated list of categories filtered by developer token
       def index
+        page = params[:page] || 1
+
         categories = Category.by_developer(developer_id)
                              .by_name(params[:name])
                              .by_search(params[:search])
-                             .page(params[:page])
+                             .page(page)
                              .per(page_size)
 
         # implement caching for the collection of categories

@@ -11,7 +11,8 @@ module Cacheable
   end
 
   def base_key
-    self.class.name.underscore
+    Rails.logger.debug "#{self.class.name.underscore}_dev_id_#{developer_id}"
+    "#{self.class.name.underscore}_dev_id_#{developer_id}"
   end
 
   # rubocop:disable Metrics/ParameterLists
@@ -66,6 +67,6 @@ module Cacheable
 
   # Returns the current cache key based on the controller's context.
   def current_cache_key
-    "#{base_key}_#{params[:id]}_#{developer_id}"
+    "#{base_key}_#{params[:id]}"
   end
 end
