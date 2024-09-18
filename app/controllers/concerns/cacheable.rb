@@ -57,7 +57,7 @@ module Cacheable
 
   # Invalidates all caches for paginated lists matching the developer ID.
   def invalidate_list_cache(base_key:)
-    Rails.cache.delete_matched("#{base_key}/*")
+    Rails.cache.delete_matched("#{base_key}*")
   end
 
   # Invalidates a specific resource's cache.
