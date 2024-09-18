@@ -52,8 +52,7 @@ module CommercecoreProductManagementService
     config.cache_store = :redis_cache_store, {
       url: ENV['REDIS_URL'],
       expires_in: 2.hours,
-      reconnect_attempts: 3,
-      logger: ActiveSupport::Logger.new($stdout)
+      reconnect_attempts: 3
     }
 
     config.autoload_paths += %W[#{config.root}/app/validators]
