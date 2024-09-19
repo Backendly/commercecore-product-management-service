@@ -173,9 +173,11 @@ RSpec.describe Cart, type: :model do
     context 'when the user ID is not unique' do
       it 'fails validation' do
         expect do
-          FactoryBot.create(:cart, user_id: cart.user_id,
-            developer_id: cart.developer_id,
-            app_id: cart.app_id)
+          FactoryBot.create(
+            :cart, user_id: cart.user_id,
+                   developer_id: cart.developer_id,
+                   app_id: cart.app_id
+          )
         end.to raise_error(ActiveRecord::RecordNotUnique)
       end
     end
@@ -186,8 +188,8 @@ RSpec.describe Cart, type: :model do
         expect do
           FactoryBot.create(
             :cart, user_id: cart.user_id,
-            developer_id: SecureRandom.uuid,
-            app_id: cart.app_id
+                   developer_id: SecureRandom.uuid,
+                   app_id: cart.app_id
           )
         end.to raise_error(ActiveRecord::RecordNotUnique)
       end
@@ -199,8 +201,8 @@ RSpec.describe Cart, type: :model do
         expect do
           FactoryBot.create(
             :cart, user_id: SecureRandom.uuid,
-            developer_id: SecureRandom.uuid,
-            app_id: cart.app_id
+                   developer_id: SecureRandom.uuid,
+                   app_id: cart.app_id
           )
         end.to_not raise_error
       end

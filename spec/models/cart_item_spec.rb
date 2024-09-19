@@ -118,8 +118,10 @@ RSpec.describe CartItem, type: :model do
     it 'does not allow the cart_id to be changed after creation' do
       expect do
         cart_item.update!(cart: FactoryBot.create(:cart))
-      end.to raise_error(ActiveRecord::ReadonlyAttributeError,
-        /cannot be changed once set/)
+      end.to raise_error(
+        ActiveRecord::ReadonlyAttributeError,
+        /cannot be changed once set/
+      )
     end
   end
 
