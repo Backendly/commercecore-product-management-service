@@ -49,7 +49,11 @@ module CommercecoreProductManagementService
       generate.orm :active_record, primary_key_type: :uuid
     end
 
-    config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] }
+    config.cache_store = :redis_cache_store, {
+      url: ENV['REDIS_URL'],
+      expires_in: 2.hours,
+      reconnect_attempts: 3
+    }
 
     config.autoload_paths += %W[#{config.root}/app/validators]
   end
