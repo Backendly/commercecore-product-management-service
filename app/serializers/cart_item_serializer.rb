@@ -3,15 +3,22 @@
 # Serializer for the cart item resource.
 class CartItemSerializer
   include JSONAPI::Serializer
-  attributes :product_id, :quantity, :created_at, :updated_at
+  attributes :quantity, :created_at, :updated_at
 
   belongs_to :product
-  belongs_to :cart
 
   cache_options store: Rails.cache, namespace: 'json-serializer',
                 expires_in: 1.hour
 
-  def total_price
-    object.product.price * object.quantity
+  attribute :product do |cart_item|
+    {
+      id: cart_item.product.id,
+      name: cart_item.product.name,
+      unit_price: cart_item.product.price
+    }
+  end
+
+  attribute :total_price do |cart_item|
+    cart_item.product.price * cart_item.quantity
   end
 end
