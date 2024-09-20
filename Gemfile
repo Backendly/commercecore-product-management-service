@@ -64,3 +64,5 @@ group :test do
 end
 
 gem 'httparty', '~> 0.22.0'
+
+gem "rack-cache", "~> 1.17"

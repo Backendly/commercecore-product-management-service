@@ -58,5 +58,7 @@ module CommercecoreProductManagementService
     config.action_controller.raise_on_missing_callback_actions = false
 
     config.autoload_paths += %W[#{config.root}/app/validators]
+
+    config.action_dispatch.rack_cache = true
   end
 end
