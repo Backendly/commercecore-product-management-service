@@ -6,6 +6,10 @@ require 'support/shared_contexts'
 RSpec.describe "Api::V1::Carts", type: :request do
   include_context 'common data'
 
+  before do
+    mock_authentication(controller_class: Api::V1::CartsController)
+  end
+
   let(:user_id) { users.dig(:one, :id) }
   let(:developer_id) { developers.dig(:first, :id) }
   let(:app_id) { developers.dig(:first, :app_id) }
