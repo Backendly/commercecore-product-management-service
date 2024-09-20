@@ -10,9 +10,19 @@ module Api
       #
       # Retrieve the current user's cart.
       def show
+        return unless stale?(last_modified: cart.updated_at, public: true)
+
         render json: json_response(
           cart, serializer:, message: 'Cart retrieved successfully'
         )
+      end
+
+      def checkout
+        render json: {
+                 message: "Preparing Cart: #{cart.id} for checkout",
+                 items: cart.cart_items
+               },
+               status: :accepted
       end
 
       private

@@ -22,6 +22,7 @@ module Api
                       'Cart item updated successfully'
                     end
           status = is_new_record ? :created : :ok
+
           render json: json_response(
             @cart_item, serializer: CartItemSerializer,
                         message:, status:
@@ -42,6 +43,11 @@ module Api
 
       # GET /api/v1/cart/items/:id
       def show
+        return unless stale?(
+          last_modified: @cart_item.updated_at,
+          public: true
+        )
+
         render json: json_response(@cart_item, serializer:)
       end
 
