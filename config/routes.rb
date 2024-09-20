@@ -3,6 +3,8 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
+      get '/', to: 'root#index'
+      get 'status', to: 'status#show'
       resources :products, only: %i[index show create update destroy] do
         member do
           post :images, to: 'products#upload_images', as: :upload_images
@@ -29,5 +31,6 @@ Rails.application.routes.draw do
   # app is live.
   get 'up' => 'rails/health#show', as: :rails_health_check
 
+  root to: redirect('/api/v1')
   match '*unmatched', to: 'application#invalid_route', via: :all
 end
