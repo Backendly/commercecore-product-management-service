@@ -22,7 +22,52 @@ class Cart < ApplicationRecord
 
   validates :user_id, :developer_id, :app_id, presence: true
 
-  def prevent_update
-    raise ActiveRecord::ReadOnlyRecord, 'Carts cannot be updated after creation'
+  # This method finds a cart by user_id and app_id, or creates a new one
+  # if not found. The developer who created the cart is also associated with
+  # it for tracking.
+  #
+  # Parameters:
+  # - user_id: (String) The UUID of the user who owns the cart.
+  # - app_id: (String) The UUID of the app associated with the cart.
+  # - developer_id: (String) The UUID of the developer associated with the
+  #   cart.
+  #
+  # Returns:
+  # - (Cart) The found or created cart.
+  #
+  def self.find_or_create(user_id:, app_id:, developer_id:)
+    cart = find_by(user_id:, app_id:)
+    cart || create(user_id:, app_id:, developer_id:)
   end
+
+  # This method adds or updates a cart item in the current cart.
+  # If the cart item already exists, it updates the quantity; otherwise,
+  # it creates a new cart item.
+  #
+  # Parameters:
+  # - product_id: (String) The UUID of the product associated with the cart
+  # item.
+  # - quantity: (Integer) The quantity of the product in the cart item.
+  #
+  # Returns:
+  # - (CartItem) The updated or created cart item.
+  #
+  def add_or_update_item(cart_item_params)
+    cart_item = cart_items.find_or_initialize_by(
+      product_id: cart_item_params[:product_id]
+    )
+    is_new_record = cart_item.new_record?
+    cart_item.assign_attributes(cart_item_params)
+    cart_item.save
+
+    [cart_item, is_new_record]
+  end
+
+  private
+
+    # Prevents updates to the cart after it is created
+    def prevent_update
+      raise ActiveRecord::ReadOnlyRecord,
+            'Carts cannot be updated after creation'
+    end
 end
