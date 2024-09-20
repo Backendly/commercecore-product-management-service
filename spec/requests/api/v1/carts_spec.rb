@@ -26,7 +26,8 @@ RSpec.describe "Api::V1::Carts", type: :request do
           )
         end
 
-        it 'uses the header fields to set the user_id, developer_id, and app_id' do
+        it 'uses the header fields to set the user_id, developer_id, ' \
+          'and app_id' do
           get api_v1_cart_path, headers: valid_headers[:first_dev]
 
           expect(response).to have_http_status(:ok)

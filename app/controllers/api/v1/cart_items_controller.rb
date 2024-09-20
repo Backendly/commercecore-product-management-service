@@ -68,6 +68,7 @@ module Api
         end
 
         # rubocop:disable Metrics/MethodLength
+        # rubocop:disable Metrics/AbcSize
 
         # Validates the presence and association of a product for a cart item.
         # It checks if the product ID is provided, if the product exists,
@@ -125,6 +126,7 @@ module Api
         end
 
         # rubocop:enable Metrics/MethodLength
+        # rubocop:enable Metrics/AbcSize
 
         def set_cart_item
           set_cart.tap { Rails.logger.debug "Cart: #{@cart}" }

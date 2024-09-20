@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # This class represents a shopping cart in the application.
-# It has a one-to-many relationship with CartItem, where a cart can have multiple cart items.
+# It has a one-to-many relationship with CartItem, where a cart can have
+# multiple cart items.
 #
 # Attributes:
 # - user_id: The ID of the user who owns the cart.
