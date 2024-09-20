@@ -11,8 +11,14 @@ Rails.application.routes.draw do
         end
       end
       resources :categories, only: %i[index show create update destroy]
+      resource :cart, only: %i[show] do
+        resources :items, controller: 'cart_items',
+                          only: %i[create show destroy index]
+      end
     end
   end
+
+  resolve('Cart') { %i[api v1 cart] }
 
   # Define your application routes per the DSL in
   # https://guides.rubyonrails.org/routing.html

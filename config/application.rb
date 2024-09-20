@@ -55,6 +55,8 @@ module CommercecoreProductManagementService
       reconnect_attempts: 3
     }
 
+    config.action_controller.raise_on_missing_callback_actions = false
+
     config.autoload_paths += %W[#{config.root}/app/validators]
   end
 end

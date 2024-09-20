@@ -11,7 +11,6 @@ module Cacheable
   end
 
   def base_key
-    Rails.logger.debug "#{self.class.name.underscore}_dev_id_#{developer_id}"
     "#{self.class.name.underscore}_dev_id_#{developer_id}"
   end
 
