@@ -45,6 +45,36 @@ RSpec.describe Product, type: :model do
     expect(Product.count).to eq(1)
   end
 
+  context 'with a negative price' do
+    let(:product) do
+      FactoryBot.create(:product, price: 1)
+    end
+
+    it 'is invalid during updates' do
+      product.update(price: -1)
+
+      expect(product).not_to be_valid
+      expect(product.errors.full_messages_for(:price)[0]).to eq(
+        'Price must be greater than or equal to 0'
+      )
+    end
+
+    it 'is invalid during creation' do
+      product = Product.new(
+        name: 'Laptop cases', developer_id:,
+        category_id: category.id, price: -1, user_id:,
+        stock_quantity: 10,
+        description: Faker::Lorem.sentence(word_count: 15),
+        app_id: UUID7.generate
+      )
+
+      expect(product).to be_invalid
+      expect(product.errors.full_messages_for(:price)[0]).to eq(
+        'Price must be greater than or equal to 0'
+      )
+    end
+  end
+
   it 'is invalid without a name' do
     product = Product.new(developer_id:, category_id: category.id, price: 100,
                           user_id:, stock_quantity: 10,
