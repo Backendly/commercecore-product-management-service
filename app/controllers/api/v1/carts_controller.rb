@@ -17,14 +17,6 @@ module Api
         )
       end
 
-      def checkout
-        render json: {
-                 message: "Preparing Cart: #{cart.id} for checkout",
-                 items: cart.cart_items
-               },
-               status: :accepted
-      end
-
       private
 
         def serializer
