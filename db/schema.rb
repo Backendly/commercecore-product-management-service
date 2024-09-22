@@ -12,9 +12,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 20_240_919_074_524) do
+ActiveRecord::Schema[7.2].define(version: 20_240_921_120_908) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  # Custom types defined in this database.
+  # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "order_status",
+              %w[pending successful failed cancelled processing]
 
   create_table "active_storage_attachments", id: :uuid, default: lambda {
     "gen_random_uuid()"
@@ -90,6 +95,31 @@ ActiveRecord::Schema[7.2].define(version: 20_240_919_074_524) do
             name: "index_categories_on_name_and_developer_id", unique: true
   end
 
+  create_table "order_items", id: :uuid, default: lambda {
+    "gen_random_uuid()"
+  }, force: :cascade do |t|
+    t.uuid "order_id", null: false
+    t.uuid "product_id", null: false
+    t.integer "quantity", null: false
+    t.decimal "price_at_purchase", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_items_on_order_id"
+    t.index ["product_id"], name: "index_order_items_on_product_id"
+  end
+
+  create_table "orders", id: :uuid, default: lambda {
+    "gen_random_uuid()"
+  }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "developer_id", null: false
+    t.uuid "app_id", null: false
+    t.decimal "total_amount", precision: 10, scale: 2
+    t.enum "status", default: "pending", null: false, enum_type: "order_status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "products", id: :uuid, default: lambda {
     "gen_random_uuid()"
   }, force: :cascade do |t|
@@ -116,5 +146,7 @@ ActiveRecord::Schema[7.2].define(version: 20_240_919_074_524) do
                   column: "blob_id"
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "products"
+  add_foreign_key "order_items", "orders"
+  add_foreign_key "order_items", "products"
   add_foreign_key "products", "categories"
 end
