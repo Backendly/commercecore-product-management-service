@@ -11,13 +11,13 @@ class OrderStatusNotificationJob
 
     ActionCable.server.broadcast(
       "order_status_id:#{order.id}_user:#{order.user_id}", {
-      order_id: order.id,
-      status: order.status,
-      total: order.total_amount,
-      items: order.order_items.map do |item|
-        { name: item.product.name, quantity: item.quantity }
-      end
-    }
+        order_id: order.id,
+        status: order.status,
+        total: order.total_amount,
+        items: order.order_items.map do |item|
+          { name: item.product.name, quantity: item.quantity }
+        end
+      }
     )
   end
 
