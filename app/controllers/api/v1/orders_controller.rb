@@ -52,8 +52,8 @@ module Api
           base_key, page:, page_size:,
                     filters: {
                       last_update: latest_update_time,
-            status: params[:status],
-            order: order_param
+                      status: params[:status],
+                      order: order_param
                     }
         ) do |collection|
           json_response(

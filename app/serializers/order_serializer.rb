@@ -4,7 +4,7 @@
 class OrderSerializer
   include JSONAPI::Serializer
   attributes :user_id, :developer_id, :app_id, :status, :total_amount,
-    :created_at, :updated_at
+             :created_at, :updated_at
 
   has_many :order_items
 
@@ -17,5 +17,5 @@ class OrderSerializer
   end
 
   cache_options store: Rails.cache, namespace: 'jsonapi-serializer',
-    expires_in: 1.hour
+                expires_in: 1.hour
 end

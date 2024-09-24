@@ -11,11 +11,11 @@ module Api
         page = params[:page] || 1
 
         @order_items = OrderItem.where(order_id: @order.id)
-                         .page(page).per(page_size)
+                                .page(page).per(page_size)
 
         render json: json_response(
           @order_items, message: 'Order items retrieved successfully',
-          serializer: OrderItemSerializer
+                        serializer: OrderItemSerializer
         ), status: :ok
       end
 
@@ -27,7 +27,7 @@ module Api
 
         render json: json_response(
           @order_item, message: 'Order item retrieved successfully',
-          serializer: OrderItemSerializer
+                       serializer: OrderItemSerializer
         ), status: :ok
       end
 
