@@ -166,10 +166,15 @@ module Api
 
         # Sets the product image based on the provided ID.
         def set_product_image
-          @product_image = @product.images.find_by!(id: params[:image_id])
+          @product_image = @product.images.find_by(id: params[:image_id])
           return unless @product_image.nil?
 
-          render_error(error: 'Image not found', status: :not_found)
+          render_error(
+            error: 'Image not found', status: :not_found, details: {
+              message: 'Verify you have the correct image ID',
+              image_id: params[:image_id]
+            }
+          )
         end
     end
 
