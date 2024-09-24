@@ -49,7 +49,7 @@ job processing and **Redis** for caching and Pub/Sub messaging.
 ### **Requirements**
 
 - **Ruby**: 3.0 or higher
-- **Rails**: 6.1 or higher
+- **Rails**: 7.2.1 or higher
 - **Redis**: For caching and Pub/Sub
 - **Sidekiq**: For background job processing
 - **PostgreSQL**: Database for storing product, order, and cart data
@@ -58,8 +58,8 @@ job processing and **Redis** for caching and Pub/Sub messaging.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/product-management-service.git
-   cd product-management-service
+   git clone https://github.com/Backendly/commercecore-product-management-service
+   cd commercecore-product-management-service
    ```
 
 2. Install dependencies:
@@ -75,7 +75,7 @@ job processing and **Redis** for caching and Pub/Sub messaging.
 
 4. Start the application:
    ```bash
-   rails s
+   rails server
    ```
 
 5. Start Sidekiq for background job processing:
@@ -119,9 +119,6 @@ config.active_job.queue_adapter = :sidekiq
 
 Below is a summary of the major API endpoints provided by this service. For a
 full list, refer to the **Postman Documentation**.
-
-Here’s the description for the **API Root** and **Health Status** endpoints that
-you can add to your README file.
 
 ---
 
