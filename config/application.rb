@@ -58,5 +58,25 @@ module CommercecoreProductManagementService
     config.action_controller.raise_on_missing_callback_actions = false
 
     config.autoload_paths += %W[#{config.root}/app/validators]
+
+    config.action_dispatch.rack_cache = true
+    config.active_job.queue_adapter = :sidekiq
+
+    # This also configures session_options for use below
+    config.session_store :cookie_store, key: '_pms_sidekiq_session'
+
+    # Required for all session management (regardless of session_store)
+    config.middleware.use ActionDispatch::Cookies
+
+    config.middleware.use config.session_store, config.session_options
+
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*'
+        resource '*',
+                 headers: :any,
+                 methods: %i[get post put patch delete options head]
+      end
+    end
   end
 end

@@ -35,7 +35,8 @@ class Product < ApplicationRecord
 
   validate :price_must_be_numeric
   validates :stock_quantity, numericality: { only_integer: true }
-  validates :price, numericality: { only_numeric: true }
+  validates :price,
+            numericality: { only_numeric: true, greater_than_or_equal_to: 0 }
 
   # ensure there's at least one product before it is created
   validates :stock_quantity,

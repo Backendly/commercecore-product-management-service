@@ -73,15 +73,11 @@ module Api
       # PATCH/PUT /api/v1/categories/:id.json
       # Updates an existing category
       def update
-        if @category.update!(category_params)
-          # Render the JSON response with the updated category
-          render json: json_response(@category,
-                                     serializer:,
-                                     message: 'Category updated successfully')
-        else
-          # Render an error response if the category could not be updated
-          render json: category.errors, status: :unprocessable_content
-        end
+        @category.update!(category_params)
+
+        render json: json_response(@category,
+                                   serializer:,
+                                   message: 'Category updated successfully')
       end
 
       # DELETE /api/v1/categories/:id
@@ -119,25 +115,6 @@ module Api
         # Returns the serializer class for the category
         def serializer
           CategorySerializer
-        end
-
-        def perform_filtering(categories)
-          # Filter categories by developer token
-          categories = categories.where(developer_id:)
-
-          # Filter categories by name
-          if params[:name].present?
-            categories = categories.where('name ILIKE ?', "%#{params[:name]}%")
-          end
-
-          # filter categories by the search term, so any category that
-          # has the search term in its name or description will be returned
-          return categories if params[:search].blank?
-
-          categories.where(
-            'name ILIKE :search OR description ILIKE :search',
-            search: "%#{params[:search]}%"
-          )
         end
     end
   end

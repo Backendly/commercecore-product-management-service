@@ -807,5 +807,16 @@ RSpec.describe "Api::V1::Products", type: :request do
         expect(response_body.dig(:data, :attributes, :images)).to be_empty
       end
     end
+
+    describe 'Deleting' do
+      context 'when the image is not found' do
+        it 'returns a 404 status code' do
+          delete delete_image_api_v1_product_url(product, UUID7.generate),
+                 headers: valid_headers[:first_dev]
+
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+    end
   end
 end

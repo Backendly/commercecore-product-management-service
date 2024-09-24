@@ -7,8 +7,6 @@ module JsonResponse
   extend ActiveSupport::Concern
   include PaginationHelper
 
-  # rubocop:disable Metrics/MethodLength
-
   # Renders the appropriate JSON response based on whether the resource is
   # paginated.
   #
@@ -27,9 +25,7 @@ module JsonResponse
     metadata = {
       status_code: code,
       success: code < 400
-    }
-
-    metadata.merge(extra_meta)
+    }.merge(extra_meta)
 
     if paginated?(resource)
       render_paginated(resource, message:, extra_meta: metadata, serializer:)
@@ -37,8 +33,6 @@ module JsonResponse
       render_single(resource, message:, extra_meta: metadata, serializer:)
     end
   end
-
-  # rubocop:enable Metrics/MethodLength
 
   private
 
