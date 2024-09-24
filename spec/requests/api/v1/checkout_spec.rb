@@ -122,7 +122,7 @@ RSpec.describe "Api::V1::Checkout", type: :request do
 
       it 'notifies the payment service' do
         expect(PaymentServiceNotifierJob).to \
-          receive(:perform_later).and_call_original
+          receive(:perform_now).and_call_original
 
         post checkout_api_v1_cart_path, headers: valid_headers[:first_dev]
       end

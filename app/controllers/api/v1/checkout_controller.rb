@@ -17,7 +17,7 @@ module Api
 
         @order = create_order
 
-        PaymentServiceNotifierJob.perform_later(@order)
+        PaymentServiceNotifierJob.perform_now(@order)
 
         move_cart_items_to_order(@order, @cart)
 
