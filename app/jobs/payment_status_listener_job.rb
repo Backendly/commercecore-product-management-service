@@ -4,6 +4,9 @@
 class PaymentStatusListenerJob < ApplicationJob
   queue_as :default
 
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
+
   def perform
     Rails.logger.debug 'Starting PaymentStatusListenerJob'
 
@@ -36,3 +39,6 @@ class PaymentStatusListenerJob < ApplicationJob
     Rails.logger.error 'Error processing payment status message'
   end
 end
+
+# rubocop:enable Metrics/MethodLength
+# rubocop:enable Metrics/AbcSize

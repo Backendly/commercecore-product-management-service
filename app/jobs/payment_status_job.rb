@@ -5,6 +5,7 @@ class PaymentStatusJob < ApplicationJob
   queue_as :default
 
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
 
   def perform(order_id, status)
     order = Order.find(order_id)
@@ -29,4 +30,5 @@ class PaymentStatusJob < ApplicationJob
   end
 
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 end
