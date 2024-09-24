@@ -20,6 +20,10 @@ class Order < ApplicationRecord
 
   validate :no_pending_orders, on: :create
 
+  scope :by_status, lambda { |status|
+    where(status:) if status.present?
+  }
+
   private
 
     def no_pending_orders
