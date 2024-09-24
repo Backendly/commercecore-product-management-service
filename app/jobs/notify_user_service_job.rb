@@ -7,7 +7,7 @@ class NotifyUserServiceJob < ApplicationJob
   def perform(order_id, status)
     order = Order.find(order_id)
 
-    Redis.new.publish('user_order_notification', {
+    message_broker.publish('user_order_notification', {
       order_id: order.id,
       user_id: order.user_id,
       status:,

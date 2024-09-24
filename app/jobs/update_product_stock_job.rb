@@ -4,6 +4,9 @@
 class UpdateProductStockJob < ApplicationJob
   queue_as :default
 
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
+
   def perform(order_id)
     order = Order.find_by(id: order_id)
 
@@ -34,4 +37,7 @@ class UpdateProductStockJob < ApplicationJob
       )
     end
   end
+
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 end

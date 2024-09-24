@@ -10,15 +10,17 @@ class PaymentServiceNotifierJob < ApplicationJob
   end
 
   def perform(order)
+    notify_payment_service(order)
+
     OrderStatusNotificationJob.notify(order)
 
-    notify_payment_service(order)
+    PaymentStatusListenerJob.perform_later
   end
 
   private
 
     def notify_payment_service(order)
-      Redis.new.publish(publish_channel(order), {
+      message_broker.publish(publish_channel(order), {
         order_id: order.id,
         user_id: order.user_id,
         app_id: order.app_id,
