@@ -3,8 +3,8 @@
 # This class represents a single item in a shopping cart.
 # It is associated with a cart and a product.
 class CartItem < ApplicationRecord
-  belongs_to :cart
-  belongs_to :product
+  belongs_to :cart, touch: true
+  belongs_to :product, touch: true
 
   validates :cart_id, :product_id, :quantity, presence: true
   validates :quantity, numericality: { greater_than: 0 }
