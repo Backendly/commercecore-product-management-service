@@ -350,7 +350,8 @@ RSpec.describe "Api::V1::Products", type: :request do
         expect(response).to have_http_status(:ok)
         expect(Rails.cache).to have_received(:fetch)
           .with(
-            "#{base_key}_page_#{page}_size_#{page_size}_#{updated_at_timestamp}",
+            "#{base_key}_page_#{page}_size_#{page_size}_" \
+              "#{updated_at_timestamp}",
             expires_in: 2.hours
           )
       end
