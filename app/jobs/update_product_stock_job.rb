@@ -27,6 +27,11 @@ class UpdateProductStockJob < ApplicationJob
     order.order_items.each do |item|
       product = Product.find_by(id: item.product_id)
 
+      unless product
+        Rails.logger.error "Product with ID #{item.product_id} not found"
+        next
+      end
+
       Rails.logger.info "Updating stock for product with ID #{product.id}"
       Rails.logger.info "Current stock quantity: #{product.stock_quantity}"
       Rails.logger.info "Quantity to remove: #{item.quantity}"

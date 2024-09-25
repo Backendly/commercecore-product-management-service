@@ -26,7 +26,7 @@ module Api
         # implement caching for the collection of categories
         response = cache_collection(
           categories, base_key,
-          page: params[:page],
+          page:,
           page_size:,
           filters: {
             name: params[:name],

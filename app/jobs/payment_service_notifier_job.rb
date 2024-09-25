@@ -2,7 +2,7 @@
 
 # Job to notify the payment service about a new order
 class PaymentServiceNotifierJob < ApplicationJob
-  queue_as :default
+  queue_as :high_priority
 
   # Notify the payment service service that the job has been cancelled
   def self.cancel_order(order)
@@ -13,8 +13,6 @@ class PaymentServiceNotifierJob < ApplicationJob
     notify_payment_service(order)
 
     OrderStatusNotificationJob.notify(order)
-
-    PaymentStatusListenerJob.perform_later
   end
 
   private
@@ -31,10 +29,6 @@ class PaymentServiceNotifierJob < ApplicationJob
     end
 
     def publish_channel(order)
-      if order.cancelled?
-        'payment_order_cancelled'
-      else
-        'payment_order_created'
-      end
+      order.cancelled? ? 'payment_order_cancelled' : 'payment_order_created'
     end
 end

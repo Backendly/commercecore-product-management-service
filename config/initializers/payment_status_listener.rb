@@ -1,17 +1,12 @@
 # frozen_string_literal: true
 
-# Payment status listener
-class PaymentStatusListenerJob < ApplicationJob
-  queue_as :default
+Thread.new do
+  Rails.logger.info 'Starting PaymentStatusListener thread'
 
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
-
-  def perform
-    Rails.logger.debug 'Starting PaymentStatusListenerJob'
+  begin
+    message_broker = Redis.new(url: ENV['MESSAGE_BROKER_URL'])
 
     message_broker.subscribe('payment_status') do |on|
-      Rails.logger.debug 'Subscribed to Redis channel'
       on.message do |_channel, message|
         Rails.logger.debug "Received message: #{message}"
 
@@ -28,17 +23,13 @@ class PaymentStatusListenerJob < ApplicationJob
         end
 
         PaymentStatusJob.perform_later(
-          payment_status[:order_id],
-          payment_status[:status]
+          payment_status[:order_id], payment_status[:status]
         )
 
         Rails.logger.debug 'Enqueued PaymentStatusJob'
       end
     end
-  rescue StandardError
-    Rails.logger.error 'Error processing payment status message'
+  rescue StandardError => e
+    Rails.logger.error "Error in PaymentStatusListener: #{e.message}"
   end
 end
-
-# rubocop:enable Metrics/MethodLength
-# rubocop:enable Metrics/AbcSize

@@ -25,6 +25,10 @@ module Cacheable
       base_key:, page:, page_size:, filters:
     )
 
+    updated_at_timestamp = collection.maximum(:updated_at).to_i
+
+    cache_key = "#{cache_key}_#{updated_at_timestamp}"
+
     Rails.cache.fetch(cache_key, expires_in:) do
       yield(collection)
     end
