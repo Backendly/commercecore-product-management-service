@@ -6,9 +6,12 @@ RSpec.describe PaymentStatusJob, type: :job do
   describe '#perform' do
     let(:order) { FactoryBot.create(:order) }
 
-    context 'when status is succeeded' do
+    context 'when status is "succeeded"' do
       it 'calls UpdateProductStockJob' do
-        expect(UpdateProductStockJob).to receive(:perform_later).with(order.id)
+        expect(UpdateProductStockJob).to receive(:perform_later).with(
+          order.id, status: 'successful'
+        )
+
         described_class.perform_now(order.id, 'succeeded')
       end
 
@@ -30,7 +33,7 @@ RSpec.describe PaymentStatusJob, type: :job do
       end
     end
 
-    context 'when status is created' do
+    context 'when status is "created"' do
       it 'calls UpdateOrderStatusJob' do
         expect(UpdateOrderStatusJob).to \
           receive(:perform_later).with(order.id, 'processing')
@@ -38,7 +41,7 @@ RSpec.describe PaymentStatusJob, type: :job do
       end
     end
 
-    context 'when status fail' do
+    context 'when status is "failed"' do
       it 'calls UpdateOrderStatusJob' do
         expect(UpdateOrderStatusJob).to \
           receive(:perform_later).with(order.id, 'failed')
@@ -55,6 +58,35 @@ RSpec.describe PaymentStatusJob, type: :job do
     it 'calls OrderStatusNotificationJob.notify' do
       expect(OrderStatusNotificationJob).to receive(:notify).with(order)
       described_class.perform_now(order.id, 'succeeded')
+    end
+
+    context 'when the order is not found' do
+      it 'does not call any job' do
+        expect(UpdateProductStockJob).not_to receive(:perform_later)
+        expect(ClearCartJob).not_to receive(:perform_later)
+        expect(UpdateOrderStatusJob).not_to receive(:perform_later)
+        expect(NotifyUserServiceJob).not_to receive(:perform_later)
+        expect(OrderStatusNotificationJob).not_to receive(:notify)
+
+        described_class.perform_now(UUID7.generate, 'succeeded')
+      end
+    end
+
+    context 'when the status is not accepted' do
+      it 'does not call any job' do
+        expect(UpdateProductStockJob).not_to receive(:perform_later)
+        expect(ClearCartJob).not_to receive(:perform_later)
+        expect(UpdateOrderStatusJob).not_to receive(:perform_later)
+        expect(NotifyUserServiceJob).not_to receive(:perform_later)
+        expect(OrderStatusNotificationJob).not_to receive(:notify)
+
+        described_class.perform_now(order.id, 'invalid')
+      end
+
+      it 'logs an error' do
+        expect(Rails.logger).to receive(:error).with('Invalid status: invalid')
+        described_class.perform_now(order.id, 'invalid')
+      end
     end
   end
 end
