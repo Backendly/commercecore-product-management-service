@@ -4,8 +4,15 @@
 class NotifyUserServiceJob < ApplicationJob
   queue_as :default
 
+  # rubocop:disable Metrics/MethodLength
+
   def perform(order_id, status)
-    order = Order.find(order_id)
+    order = Order.find_by(id: order_id)
+
+    unless order
+      Rails.logger.error "Order with ID: #{order_id} not found"
+      return
+    end
 
     message_broker.publish('user_order_notification', {
       order_id: order.id,
@@ -15,3 +22,5 @@ class NotifyUserServiceJob < ApplicationJob
     }.to_json)
   end
 end
+
+# rubocop:enable Metrics/MethodLength
