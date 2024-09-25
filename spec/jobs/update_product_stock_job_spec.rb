@@ -71,5 +71,21 @@ RSpec.describe UpdateProductStockJob, type: :job do
         described_class.perform_now('invalid_id')
       end
     end
+
+    context 'when the order is refunded' do
+      before do
+        order.update(status: 'successful')
+      end
+
+      let!(:order_item) do
+        FactoryBot.create(:order_item, order:, product:, quantity: 1)
+      end
+
+      it 'restores the product stock' do
+        expect do
+          described_class.perform_now(order.id, status: 'refunded')
+        end.to change { product.reload.stock_quantity }.from(10).to(11)
+      end
+    end
   end
 end

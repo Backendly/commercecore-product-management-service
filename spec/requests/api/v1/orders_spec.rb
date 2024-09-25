@@ -63,6 +63,19 @@ RSpec.describe "Api::V1::Orders", type: :request do
           expect(response_body[:data]).to_not be_empty
         end
 
+        describe 'ordering' do
+          context 'when the "asc" query parameter is specified' do
+            it 'returns the orders in ascending order' do
+              get api_v1_orders_path, headers: valid_headers[:first_dev],
+                                      params: { order: 'asc' }
+
+              expect(response).to have_http_status(:ok)
+              data = response_body[:data]
+              expect(data.first[:id]).to eq(@order.id)
+            end
+          end
+        end
+
         describe 'filtering' do
           context 'when filtered by orders with available entries' do
             %w[pending cancelled processing successful

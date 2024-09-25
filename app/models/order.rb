@@ -5,7 +5,7 @@ class Order < ApplicationRecord
   has_many :order_items, dependent: :destroy
 
   enum :status, {
-    pending: 'pending', successful: 'successful',
+    pending: 'pending', successful: 'successful', refunded: 'refunded',
     failed: 'failed', cancelled: 'cancelled', processing: 'processing'
   }
 

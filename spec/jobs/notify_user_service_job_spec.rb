@@ -64,5 +64,36 @@ RSpec.describe NotifyUserServiceJob, type: :job do
         described_class.perform_now(order.id, 'processing')
       end
     end
+
+    context 'when the order is refunded' do
+      it 'publishes a message' do
+        expect_any_instance_of(Redis).to receive(:publish).with(
+          'user_order_notification', {
+            order_id: order.id,
+            user_id: order.user_id,
+            status: 'refunded',
+            total_amount: order.total_amount
+          }.to_json
+        )
+
+        described_class.perform_now(order.id, 'refunded')
+      end
+    end
+
+    context 'when the order is not found' do
+      it 'does not publish a message' do
+        expect_any_instance_of(Redis).not_to receive(:publish)
+
+        described_class.perform_now('invalid_id', 'successful')
+      end
+
+      it 'logs an error' do
+        expect(Rails.logger).to receive(:error).with(
+          'Order with ID: invalid_id not found'
+        )
+
+        described_class.perform_now('invalid_id', 'successful')
+      end
+    end
   end
 end

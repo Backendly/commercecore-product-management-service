@@ -45,13 +45,10 @@ module Api
                        .order(created_at: order_param)
                        .page(page).per(page_size)
 
-        latest_update_time = @orders.maximum(:updated_at).to_i
-
         response = cache_collection(
           @orders,
           base_key, page:, page_size:,
                     filters: {
-                      last_update: latest_update_time,
                       status: params[:status],
                       order: order_param
                     }

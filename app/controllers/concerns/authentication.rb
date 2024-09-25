@@ -41,7 +41,10 @@ module Authentication
 
     # rubocop:disable Metrics/MethodLength
     def verify_developer_token!
-      cached_developer = user_service_client.fetch_developer_id(developer_token)
+      cached_developer = user_service_client.fetch_developer_id(
+        developer_token:
+      )
+
       if cached_developer
         true
       else
@@ -59,7 +62,10 @@ module Authentication
     end
 
     def verify_user_id!
-      cached_user = user_service_client.fetch_user(user_id)
+      cached_user = user_service_client.fetch_user(
+        user_id:, app_id:, developer_token:
+      )
+
       if cached_user
         true
       else
@@ -77,7 +83,7 @@ module Authentication
     end
 
     def verify_app_id!
-      cached_app = user_service_client.fetch_app(app_id)
+      cached_app = user_service_client.fetch_app(app_id:, developer_token:)
       return if cached_app
 
       render_error(
