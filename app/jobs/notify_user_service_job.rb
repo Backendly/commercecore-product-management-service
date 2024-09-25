@@ -9,7 +9,7 @@ class NotifyUserServiceJob < ApplicationJob
   def perform(order_id, status)
     order = Order.find_by(id: order_id)
 
-    unless order
+    if order.nil?
       Rails.logger.error "Order with ID: #{order_id} not found"
       return
     end
