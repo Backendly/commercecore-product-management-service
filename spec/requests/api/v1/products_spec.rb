@@ -338,6 +338,11 @@ RSpec.describe "Api::V1::Products", type: :request do
       end
       let(:page) { 1 }
       let(:page_size) { 100 }
+      let(:developer_id) { developers.dig(:first, :id) }
+      let(:app_id) { developers.dig(:first, :app_id) }
+      let(:updated_at_timestamp) do
+        Product.where(developer_id:, app_id:).maximum(:updated_at).to_i
+      end
 
       it 'caches the product response' do
         get api_v1_products_url, headers: valid_headers[:first_dev]
@@ -345,7 +350,7 @@ RSpec.describe "Api::V1::Products", type: :request do
         expect(response).to have_http_status(:ok)
         expect(Rails.cache).to have_received(:fetch)
           .with(
-            "#{base_key}_page_#{page}_size_#{page_size}",
+            "#{base_key}_page_#{page}_size_#{page_size}_#{updated_at_timestamp}",
             expires_in: 2.hours
           )
       end
@@ -355,9 +360,11 @@ RSpec.describe "Api::V1::Products", type: :request do
                                  params: { name: 'Microwave' }
 
         expect(response).to have_http_status(:ok)
+
         expect(Rails.cache).to have_received(:fetch)
           .with(
-            "#{base_key}_page_#{page}_size_#{page_size}_name_Microwave",
+            "#{base_key}_page_#{page}_size_#{page_size}_name_Microwave_" \
+              "#{updated_at_timestamp}",
             expires_in: 2.hours
           )
       end
