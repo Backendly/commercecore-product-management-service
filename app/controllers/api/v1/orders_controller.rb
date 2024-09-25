@@ -18,7 +18,7 @@ module Api
             error: 'Order cannot be cancelled', status: :bad_request,
             details: {
               message: 'Order can only be cancelled if it is in a ' \
-                'pending or processing state',
+                'pending state',
               order: {
                 id: @order.id,
                 status: @order.status
