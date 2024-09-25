@@ -54,6 +54,11 @@ module Api
       # GET /api/v1/products/:id
       # Retrieves a specific product by ID.
       def show
+        return unless stale?(
+          @product, last_modified: @product.updated_at,
+                    public: true
+        )
+
         render json: json_response(
           @product,
           message: 'Product retrieved successfully',
@@ -118,9 +123,9 @@ module Api
         # to @product. If not found or the cached product is stale, it is
         # fetched from the database.
         def set_product
-          @product = cache_resource(current_cache_key) do
-            Product.find_by!(id: params[:id], developer_id:, app_id:)
-          end
+          @product = Product.find_by!(id: params[:id], developer_id:, app_id:)
+          cache_key = "#{current_cache_key}_#{@product.updated_at.to_i}"
+          @product = cache_resource(cache_key) { @product }
         end
 
         # Strong parameters for product creation and updates.
@@ -145,7 +150,7 @@ module Api
         # Checks if the provided category ID is valid.
         def invalid_category_id?
           category_id = product_params[:category_id]
-          category_id.present? && !validate_category_id(category_id)
+          category_id.present? && !valid_category_id?(category_id)
         end
 
         # Renders an error response for invalid category ID.
@@ -158,7 +163,7 @@ module Api
         end
 
         # Validates the existence of a category by ID.
-        def validate_category_id(category_id)
+        def valid_category_id?(category_id)
           Rails.cache.fetch("category_#{category_id}_#{developer_token}") do
             Category.exists?(id: category_id, developer_id:)
           end
