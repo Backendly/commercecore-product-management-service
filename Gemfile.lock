@@ -339,5 +339,8 @@ DEPENDENCIES
   tzinfo-data
   uuid7 (~> 0.2.0)
 
+RUBY VERSION
+   ruby 3.3.4p94
+
 BUNDLED WITH
    2.5.18
