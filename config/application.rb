@@ -51,7 +51,7 @@ module CommercecoreProductManagementService
 
     config.cache_store = :redis_cache_store, {
       url: ENV['REDIS_URL'],
-      expires_in: 2.hours,
+      expires_in: 60.days,
       reconnect_attempts: 3
     }
 
