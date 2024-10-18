@@ -352,7 +352,7 @@ RSpec.describe "Api::V1::Products", type: :request do
           .with(
             "#{base_key}_page_#{page}_size_#{page_size}_" \
               "#{updated_at_timestamp}",
-            expires_in: 2.hours
+            expires_in: 1.day
           )
       end
 
@@ -366,7 +366,7 @@ RSpec.describe "Api::V1::Products", type: :request do
           .with(
             "#{base_key}_page_#{page}_size_#{page_size}_name_Microwave_" \
               "#{updated_at_timestamp}",
-            expires_in: 2.hours
+            expires_in: 1.day
           )
       end
     end
