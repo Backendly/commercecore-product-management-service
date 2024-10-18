@@ -19,7 +19,7 @@ module Cacheable
   # Caches a collection of resources with a generated cache key.
   def cache_collection(
     collection, base_key, page:, page_size:, filters: {},
-    expires_in: 2.hours
+    expires_in: 1.day
   )
     cache_key = generate_list_cache_key(
       base_key:, page:, page_size:, filters:
@@ -37,7 +37,7 @@ module Cacheable
   # rubocop:enable Metrics/ParameterLists
 
   # Caches a single resource with a generated cache key.
-  def cache_resource(cache_key, expires_in: 2.hours, &block)
+  def cache_resource(cache_key, expires_in: 1.day, &block)
     Rails.cache.fetch(cache_key, expires_in:, &block)
   end
 

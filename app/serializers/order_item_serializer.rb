@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 # Order Item Serializer
-class OrderItemSerializer
-  include JSONAPI::Serializer
+class OrderItemSerializer < BaseSerializer
   attributes :quantity, :price_at_purchase
 
   belongs_to :order
@@ -21,8 +20,4 @@ class OrderItemSerializer
   link :product do |object|
     Rails.application.routes.url_helpers.api_v1_product_path(object.product)
   end
-
-  # cache the response
-  cache_options store: Rails.cache, namespace: 'jsonapi-serializer',
-                expires_in: 1.hour
 end

@@ -1,14 +1,10 @@
 # frozen_string_literal: true
 
 # Serializer for the cart item resource.
-class CartItemSerializer
-  include JSONAPI::Serializer
+class CartItemSerializer < BaseSerializer
   attributes :quantity, :created_at, :updated_at
 
   belongs_to :product
-
-  cache_options store: Rails.cache, namespace: 'json-serializer',
-                expires_in: 1.hour
 
   attribute :product do |cart_item|
     {

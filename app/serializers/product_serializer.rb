@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 # Serializer for Products
-class ProductSerializer
-  include JSONAPI::Serializer
-
+class ProductSerializer < BaseSerializer
   attributes(
     *Product.attribute_names.map(&:to_sym).reject do |attr|
       %i[id category_id].include?(attr)
@@ -26,7 +24,4 @@ class ProductSerializer
         ) }
     end
   end
-
-  cache_options store: Rails.cache, namespace: 'jsonapi-serializer',
-                expires_in: 2.hours
 end
