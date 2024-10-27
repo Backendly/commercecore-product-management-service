@@ -407,7 +407,7 @@ RSpec.describe "/api/v1/categories", type: :request do
 
             expect(response).to have_http_status(:conflict)
 
-            expect(response_body[:error]).to eq("Duplicate object found")
+            expect(response_body[:error]).to eq("Duplicate record found")
           end
 
           it "renders a JSON response with the newly created category" do

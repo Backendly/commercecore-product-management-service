@@ -71,7 +71,7 @@ class ApplicationController < ActionController::API
                   'A record with that name already exists.'
                 end
 
-      render_error(error: 'Duplicate object found',
+      render_error(error: 'Duplicate record found',
                    details:, status: :conflict)
     end
 
