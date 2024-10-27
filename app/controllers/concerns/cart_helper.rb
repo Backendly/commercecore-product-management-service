@@ -18,8 +18,8 @@ module CartHelper
   # * (Cart): The current user's cart.
   #
   def cart
-    cache_resource("cart_#{developer_id}_#{app_id}_#{user_id}") do
-      Cart.find_or_create(user_id:, app_id:, developer_id:)
-    end
+    cart = Cart.find_or_create(user_id:, app_id:, developer_id:)
+    key = "cart_#{developer_id}_#{app_id}_#{user_id}_#{cart.updated_at.to_i}"
+    cache_resource(key) { cart }
   end
 end
