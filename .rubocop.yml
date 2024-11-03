@@ -1,6 +1,6 @@
 # Inherit from your local RuboCop configuration file
 inherit_from:
-  - config/lint/rubocop.yml
+  - https://raw.githubusercontent.com/nanafox/rubocop-config/refs/heads/main/.rubocop.yml
 
 # Omakase Ruby styling for Rails
 inherit_gem:
