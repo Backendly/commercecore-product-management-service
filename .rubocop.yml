@@ -1,4 +1,3 @@
-# Inherit from your local RuboCop configuration file
 inherit_from:
   - https://raw.githubusercontent.com/nanafox/rubocop-config/refs/heads/main/.rubocop.yml
 

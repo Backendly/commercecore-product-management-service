@@ -15,10 +15,10 @@ class PaymentStatusJob < ApplicationJob
     end
 
     status_actions = {
-      succeeded: ['successful', true],
-      created: ['processing', false],
-      failed: ['failed', false],
-      refunded: ['refunded', true]
+      succeeded: [ "successful", true ],
+      created: [ "processing", false ],
+      failed: [ "failed", false ],
+      refunded: [ "refunded", true ]
     }
 
     sym_status = status.to_sym
@@ -31,7 +31,7 @@ class PaymentStatusJob < ApplicationJob
         UpdateProductStockJob.perform_later(order.id, status: new_status)
       end
 
-      ClearCartJob.perform_later(order.user_id) if status == 'succeeded'
+      ClearCartJob.perform_later(order.user_id) if status == "succeeded"
     else
       Rails.logger.error "Invalid status: #{status}"
       return

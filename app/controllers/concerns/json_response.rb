@@ -17,7 +17,7 @@ module JsonResponse
   # @param extra_meta [Hash] Additional metadata to include in the response
   #   (default: {}).
   def json_response(
-    resource, serializer:, message: 'Request successful',
+    resource, serializer:, message: "Request successful",
     extra_meta: {}, status: nil
   )
 
@@ -82,6 +82,6 @@ module JsonResponse
       code = Rack::Utils.status_code(status)
       return code unless code.zero?
 
-      request.method == 'POST' ? 201 : 200
+      request.method == "POST" ? 201 : 200
     end
 end

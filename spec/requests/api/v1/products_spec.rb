@@ -348,12 +348,10 @@ RSpec.describe "Api::V1::Products", type: :request do
         get api_v1_products_url, headers: valid_headers[:first_dev]
 
         expect(response).to have_http_status(:ok)
-        expect(Rails.cache).to have_received(:fetch)
-          .with(
-            "#{base_key}_page_#{page}_size_#{page_size}_" \
-              "#{updated_at_timestamp}",
-            expires_in: 1.day
-          )
+        expect(Rails.cache).to have_received(:fetch).with(
+          "#{base_key}_page_#{page}_size_#{page_size}_#{updated_at_timestamp}",
+          expires_in: 1.day
+        )
       end
 
       it 'caches the product response with filters' do
@@ -362,12 +360,11 @@ RSpec.describe "Api::V1::Products", type: :request do
 
         expect(response).to have_http_status(:ok)
 
-        expect(Rails.cache).to have_received(:fetch)
-          .with(
-            "#{base_key}_page_#{page}_size_#{page_size}_name_Microwave_" \
-              "#{updated_at_timestamp}",
-            expires_in: 1.day
-          )
+        expect(Rails.cache).to have_received(:fetch).with(
+          "#{base_key}_page_#{page}_size_#{page_size}_name_Microwave_" \
+            "#{updated_at_timestamp}",
+          expires_in: 1.day
+        )
       end
     end
   end
@@ -578,9 +575,9 @@ RSpec.describe "Api::V1::Products", type: :request do
                params: { product: value },
                headers: valid_headers[:first_dev], as: :json
 
-          expect(response).to have_http_status(422),
-                              "Expected 422 for #{key} but got" \
-                                " #{response.status}"
+          expect(response)
+            .to have_http_status(422),
+              "Expected 422 for #{key} but got #{response.status}"
         end
       end
     end
@@ -694,7 +691,7 @@ RSpec.describe "Api::V1::Products", type: :request do
         product = Product.first
 
         post upload_images_api_v1_product_url(product),
-             params: { images: [image1, image2, image3] },
+          params: { images: [ image1, image2, image3 ] },
              headers: valid_headers[:first_dev]
 
         expect(product.images.attached?).to be_truthy
@@ -737,7 +734,7 @@ RSpec.describe "Api::V1::Products", type: :request do
         product = Product.first
 
         post upload_images_api_v1_product_url(product),
-             params: { images: [invalid_image] },
+          params: { images: [ invalid_image ] },
              headers: valid_headers[:first_dev]
 
         expect(product.images.attached?).to be_falsey
@@ -749,7 +746,7 @@ RSpec.describe "Api::V1::Products", type: :request do
         product = Product.first
 
         post upload_images_api_v1_product_url(product),
-             params: { images: [large_file] },
+          params: { images: [ large_file ] },
              headers: valid_headers[:first_dev]
 
         expect(product.images.attached?).to be_falsey

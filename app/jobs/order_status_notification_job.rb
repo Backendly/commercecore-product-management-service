@@ -6,7 +6,7 @@ class OrderStatusNotificationJob
 
   # Notify the user about the order
   def self.notify(order)
-    Rails.logger.debug 'OrderNotificationJob: Notifying order status to ' \
+    Rails.logger.debug "OrderNotificationJob: Notifying order status to " \
       "user #{order.user_id} with order id #{order}"
 
     ActionCable.server.broadcast(

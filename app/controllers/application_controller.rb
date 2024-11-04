@@ -16,7 +16,7 @@ class ApplicationController < ActionController::API
   # rubocop:disable Metrics/MethodLength
 
   # Renders a JSON error response
-  def render_error(status:, error: 'An error occurred', details: nil, meta: {})
+  def render_error(status:, error: "An error occurred", details: nil, meta: {})
     numeric_status_code = Rack::Utils.status_code(status)
     success = false
 
@@ -42,7 +42,7 @@ class ApplicationController < ActionController::API
 
   def invalid_route
     render_error(
-      error: 'Route not found',
+      error: "Route not found",
       details: { message: "Invalid route: #{request.path}" },
       status: :not_found
     )
@@ -67,11 +67,11 @@ class ApplicationController < ActionController::API
       details = if match_data
                   field, value = match_data.captures
                   "A record with #{field} '#{value}' already exists."
-                else
-                  'A record with that name already exists.'
-                end
+      else
+                  "A record with that name already exists."
+      end
 
-      render_error(error: 'Duplicate record found',
+      render_error(error: "Duplicate record found",
                    details:, status: :conflict)
     end
 
@@ -79,7 +79,7 @@ class ApplicationController < ActionController::API
     def internal_server_error(error)
       logger.error "#{error.class.name}: #{error.message}"
       render_error(
-        error: 'Internal Server Error',
+        error: "Internal Server Error",
         status: :internal_server_error
       )
     end
@@ -87,7 +87,7 @@ class ApplicationController < ActionController::API
     # Handles validation errors
     def validation_error(error)
       render_error(
-        error: 'Validation Failed',
+        error: "Validation Failed",
         details: error.record.errors.to_hash(full_messages: true),
         status: :unprocessable_content
       )
@@ -95,7 +95,7 @@ class ApplicationController < ActionController::API
 
     def bad_request(error)
       render_error(
-        error: 'Bad Request',
+        error: "Bad Request",
         details: error.message,
         status: :bad_request
       )

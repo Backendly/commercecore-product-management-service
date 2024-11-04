@@ -5,7 +5,7 @@ class Product < ApplicationRecord
   include WordCountValidatable
 
   scope :by_name, lambda { |name|
-    where('name ILIKE ?', "%#{name}%") if name.present?
+    where("name ILIKE ?", "%#{name}%") if name.present?
   }
   scope :by_category, lambda { |category_id|
     where(category_id:) if category_id.present?
@@ -26,12 +26,12 @@ class Product < ApplicationRecord
   validates :images,
             size: {
               max_size: 2.megabytes,
-              message: 'size must be less than 2MB'
+              message: "size must be less than 2MB"
             }
 
   validates :developer_id, :name, :price, :user_id, :app_id,
             :stock_quantity, :description, :currency, presence: true
-  validates :available, inclusion: { in: [true, false] }
+  validates :available, inclusion: { in: [ true, false ] }
 
   validate :price_must_be_numeric
   validates :stock_quantity, numericality: { only_integer: true }
@@ -50,6 +50,6 @@ class Product < ApplicationRecord
   private
 
     def price_must_be_numeric
-      errors.add(:price, 'must be a number') unless price.is_a?(Numeric)
+      errors.add(:price, "must be a number") unless price.is_a?(Numeric)
     end
 end

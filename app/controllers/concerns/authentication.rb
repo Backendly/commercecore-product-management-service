@@ -13,17 +13,17 @@ module Authentication
   end
 
   def user_id
-    request.headers.fetch('X-User-Id', nil)
+    request.headers.fetch("X-User-Id", nil)
   end
 
   def app_id
-    request.headers.fetch('X-App-Id', nil)
+    request.headers.fetch("X-App-Id", nil)
   end
 
   private
 
     def developer_token
-      request.headers.fetch('X-Developer-Token', nil)
+      request.headers.fetch("X-Developer-Token", nil)
     end
 
     def verify_authentication_credentials!
@@ -49,11 +49,11 @@ module Authentication
         true
       else
         render_error(
-          error: 'Authorization failed',
+          error: "Authorization failed",
           details: {
-            error: 'Invalid developer token',
-            message: 'Please provide a valid developer token in the header. ' \
-              'E.g., X-Developer-Token: <developer_token>'
+            error: "Invalid developer token",
+            message: "Please provide a valid developer token in the header. " \
+              "E.g., X-Developer-Token: <developer_token>"
           },
           status: :unauthorized
         )
@@ -70,11 +70,11 @@ module Authentication
         true
       else
         render_error(
-          error: 'Authorization failed',
+          error: "Authorization failed",
           details: {
-            error: 'Invalid user ID',
-            message: 'Please provide a valid user ID. ' \
-              'E.g., X-User-Id: <user_id>'
+            error: "Invalid user ID",
+            message: "Please provide a valid user ID. " \
+              "E.g., X-User-Id: <user_id>"
           },
           status: :unauthorized
         )
@@ -87,10 +87,10 @@ module Authentication
       return if cached_app
 
       render_error(
-        error: 'Authorization failed',
+        error: "Authorization failed",
         details: {
-          error: 'Invalid app ID',
-          message: 'Please provide a valid app ID. E.g., X-App-Id: <app_id>'
+          error: "Invalid app ID",
+          message: "Please provide a valid app ID. E.g., X-App-Id: <app_id>"
         },
         status: :unauthorized
       )

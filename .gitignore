@@ -33,3 +33,6 @@
 /config/master.key
 .idea/
 /coverage/
+
+# ignore generated rubocop cache file
+.rubocop-http*

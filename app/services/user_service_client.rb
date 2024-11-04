@@ -3,7 +3,7 @@
 # Service class to handle API requests to the user service and manage caching.
 class UserServiceClient
   include HTTParty
-  base_uri ENV['USER_SERVICE_URL']
+  base_uri ENV["USER_SERVICE_URL"]
 
   # rubocop:disable Metrics/MethodLength
 
@@ -18,16 +18,16 @@ class UserServiceClient
     return cached_data if cached_data
 
     response = self.class.get(
-      '/developer/validate-token',
-      headers: { 'X-API-Token' => developer_token }
+      "/developer/validate-token",
+      headers: { "X-API-Token" => developer_token }
     )
 
     if response.success?
       Rails.cache.fetch(dev_token_key, expires_in: 12.hours) do
-        response.parsed_response.dig('developer', 'id')
+        response.parsed_response.dig("developer", "id")
       end
     else
-      Rails.logger.error 'Failed to validate developer token: ' \
+      Rails.logger.error "Failed to validate developer token: " \
         "#{developer_token}"
       nil
     end
@@ -47,8 +47,8 @@ class UserServiceClient
 
     response = self.class.get(
       "/user/validate-user/#{user_id}", headers: {
-        'X-API-Token' => developer_token,
-        'X-App-Id' => app_id
+      "X-API-Token" => developer_token,
+      "X-App-Id" => app_id
       }
     )
 
@@ -57,7 +57,7 @@ class UserServiceClient
         response.parsed_response
       end
     else
-      Rails.logger.error 'Failed to validate user: ' \
+      Rails.logger.error "Failed to validate user: " \
         "#{user_id} for app: #{app_id}"
 
       nil
@@ -77,7 +77,7 @@ class UserServiceClient
 
     response = self.class.get(
       "/app/validate-app/#{app_id}", headers: {
-        'X-API-Token' => developer_token
+      "X-API-Token" => developer_token
       }
     )
 
@@ -86,7 +86,7 @@ class UserServiceClient
         response.parsed_response
       end
     else
-      Rails.logger.error 'Failed to validate app: ' \
+      Rails.logger.error "Failed to validate app: " \
         "#{app_id} for developer: #{developer_token}"
       nil
     end

@@ -169,7 +169,7 @@ RSpec.describe Product, type: :model do
       expect(Product.first.user_id).to eq(user_id)
       expect(Product.last.user_id).to eq(second_user_id)
 
-      expect(category.products).to eq([Product.first, Product.last])
+      expect(category.products).to eq([ Product.first, Product.last ])
     end
   end
 

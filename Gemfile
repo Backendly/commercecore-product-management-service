@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-ruby '3.3.4'
+ruby "3.3.4"
 
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '~> 7.2.2'
+gem "rails", "~> 7.2.2"
 # Use postgresql as the database for Active Record
-gem 'pg', '~> 1.5'
+gem "pg", "~> 1.5"
 # Use the Puma web server [https://github.com/puma/puma]
-gem 'puma', '>= 5.0'
+gem "puma", ">= 5.0"
 # Use Redis adapter to run Action Cable in production
-gem 'redis', '>= 4.0.1'
+gem "redis", ">= 4.0.1"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem 'kredis'
@@ -20,10 +20,10 @@ gem 'redis', '>= 4.0.1'
 # gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: %i[windows jruby]
+gem "tzinfo-data", platforms: %i[windows jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', require: false
+gem "bootsnap", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
@@ -33,42 +33,42 @@ gem 'bootsnap', require: false
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem 'debug', platforms: %i[mri windows], require: 'debug/prelude'
+  gem "debug", platforms: %i[mri windows], require: "debug/prelude"
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
-  gem 'brakeman', require: false
+  gem "brakeman", require: false
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
-  gem 'rubocop-rails-omakase', require: false
+  gem "rubocop-rails-omakase", require: false
 
-  gem 'rspec-rails', '~> 7.0'
+  gem "rspec-rails", "~> 7.0"
 
-  gem 'factory_bot_rails'
+  gem "factory_bot_rails"
 
-  gem 'dotenv-rails'
+  gem "dotenv-rails"
 
   # code coverage
-  gem 'simplecov', require: false
+  gem "simplecov", require: false
 
-  gem 'faker'
+  gem "faker"
 end
 
-gem 'uuid7', '~> 0.2.0'
+gem "uuid7", "~> 0.2.0"
 
 # for pagination
-gem 'kaminari'
+gem "kaminari"
 
 # for JSON response serialization
-gem 'jsonapi-serializer'
+gem "jsonapi-serializer"
 
 group :test do
-  gem 'database_cleaner-active_record'
+  gem "database_cleaner-active_record"
 end
 
-gem 'httparty', '~> 0.22.0'
+gem "httparty", "~> 0.22.0"
 
-gem 'rack-cache', '~> 1.17'
+gem "rack-cache", "~> 1.17"
 
-gem 'sidekiq', '~> 7.3'
+gem "sidekiq", "~> 7.3"
 
-gem 'rack-cors', require: 'rack/cors'
+gem "rack-cors", require: "rack/cors"

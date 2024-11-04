@@ -61,7 +61,7 @@ class Cart < ApplicationRecord
     cart_item.assign_attributes(cart_item_params)
     cart_item.save
 
-    [cart_item, is_new_record]
+    [ cart_item, is_new_record ]
   end
 
   private
@@ -69,6 +69,6 @@ class Cart < ApplicationRecord
     # Prevents updates to the cart after it is created
     def prevent_update
       raise ActiveRecord::ReadOnlyRecord,
-            'Carts cannot be updated after creation'
+        "Carts cannot be updated after creation"
     end
 end

@@ -18,9 +18,9 @@ module PaginationHelper
     ].min
   end
 
-  def paginate(resource, message: 'Records retrieved successfully')
+  def paginate(resource, message: "Records retrieved successfully")
     page = resource.current_page
-    total_pages = [resource.total_pages, 1].max
+    total_pages = [ resource.total_pages, 1 ].max
     page_size = resource.limit_value
 
     {

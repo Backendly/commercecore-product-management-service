@@ -23,11 +23,11 @@ module Api
 
         render json: json_response(
           @order,
-          message: 'Order created successfully',
+          message: "Order created successfully",
           serializer: OrderSerializer,
           extra_meta: {
-            info: 'Checkout in progress. Please complete the payment ' \
-              'to confirm the order'
+            info: "Checkout in progress. Please complete the payment " \
+              "to confirm the order"
           }
         ), status: :created
       end
@@ -43,7 +43,7 @@ module Api
         def valid_cart_items?
           if @cart.nil? || @cart.cart_items.empty?
             render_error(
-              error: 'Cart is empty or does not exist',
+              error: "Cart is empty or does not exist",
               details: { errors: @cart.errors.full_messages,
                          cart_item_count: @cart.cart_items.count },
               status: :unprocessable_content
@@ -84,9 +84,9 @@ module Api
               status: :payment_required,
               details: {
                 order_id: order.id,
-                next_steps: 'Please complete the payment to confirm the order',
+                next_steps: "Please complete the payment to confirm the order",
                 alternative: "You can cancel the #{order.status} order and " \
-                  'create a new one'
+                  "create a new one"
               }
             )
 
@@ -104,7 +104,7 @@ module Api
             developer_id: @cart.developer_id,
             app_id: @cart.app_id,
             total_amount: calculate_total_amount(@cart),
-            status: 'pending'
+            status: "pending"
           )
         end
 

@@ -51,11 +51,11 @@ module Cacheable
 
   # Generates a cache key for paginated lists based on filters.
   def generate_list_cache_key(base_key:, page:, page_size:, filters: {})
-    key_parts = ["#{base_key}_page_#{page}_size_#{page_size}"]
+    key_parts = [ "#{base_key}_page_#{page}_size_#{page_size}" ]
     filters.each do |filter_key, filter_value|
       key_parts << "#{filter_key}_#{filter_value}" if filter_value.present?
     end
-    key_parts.join('_')
+    key_parts.join("_")
   end
 
   # Invalidates all caches for paginated lists matching the developer ID.

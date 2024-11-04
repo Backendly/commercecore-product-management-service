@@ -27,17 +27,17 @@ module Api
       #
       def index
         render json: {
-          message: 'Welcome to the Product Management Service API',
-          version: 'v1',
+          message: "Welcome to the Product Management Service API",
+          version: "v1",
           base_url: "#{request.base_url}/api/v1",
-          documentation: 'https://documenter.getpostman.com/view/' \
-            '14404907/2sAXjRWpnZ',
+          documentation: "https://documenter.getpostman.com/view/" \
+            "14404907/2sAXjRWpnZ",
           available_endpoints: {
-            products: '/api/v1/products',
-            categories: '/api/v1/categories',
-            carts: '/api/v1/cart',
-            orders: '/api/v1/orders',
-            status: '/api/v1/status'
+            products: "/api/v1/products",
+            categories: "/api/v1/categories",
+            carts: "/api/v1/cart",
+            orders: "/api/v1/orders",
+            status: "/api/v1/status"
           }
         }, status: :ok
       end

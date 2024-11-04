@@ -34,7 +34,7 @@ class SizeValidator < ActiveModel::EachValidator
         next
       end
 
-      message = options[:message] || 'is too large. Maximum size allowed ' \
+      message = options[:message] || "is too large. Maximum size allowed " \
         "is #{options[:max_size]} bytes."
       record.errors.add(attribute, message)
     end

@@ -4,6 +4,6 @@
 class BaseSerializer
   include JSONAPI::Serializer
 
-  cache_options store: Rails.cache, namespace: 'json-serializer',
+  cache_options store: Rails.cache, namespace: "json-serializer",
                 expires_in: 1.day
 end

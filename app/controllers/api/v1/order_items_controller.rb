@@ -14,7 +14,7 @@ module Api
                                 .page(page).per(page_size)
 
         render json: json_response(
-          @order_items, message: 'Order items retrieved successfully',
+          @order_items, message: "Order items retrieved successfully",
                         serializer: OrderItemSerializer
         ), status: :ok
       end
@@ -26,7 +26,7 @@ module Api
         )
 
         render json: json_response(
-          @order_item, message: 'Order item retrieved successfully',
+          @order_item, message: "Order item retrieved successfully",
                        serializer: OrderItemSerializer
         ), status: :ok
       end

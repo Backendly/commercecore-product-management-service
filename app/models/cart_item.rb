@@ -16,8 +16,8 @@ class CartItem < ApplicationRecord
     def prevent_cart_id_change
       return unless cart_id_changed?
 
-      errors.add(:cart_id, 'cannot be changed once set')
+      errors.add(:cart_id, "cannot be changed once set")
       raise ActiveRecord::ReadonlyAttributeError,
-            'cart_id cannot be changed once set'
+        "cart_id cannot be changed once set"
     end
 end

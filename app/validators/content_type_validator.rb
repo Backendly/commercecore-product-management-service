@@ -21,8 +21,8 @@ class ContentTypeValidator < ActiveModel::EachValidator
     value.each do |file|
       next if allowed_types.include?(file.content_type)
 
-      record.errors.add(attribute, 'Invalid file type. Allowed types are: ' \
-        'image/png, image/jpg, image/jpeg, images/webp')
+      record.errors.add(attribute, "Invalid file type. Allowed types are: " \
+        "image/png, image/jpg, image/jpeg, images/webp")
     end
   end
 end

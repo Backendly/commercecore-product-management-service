@@ -15,25 +15,25 @@ module Api
       def cancel
         unless cancellable?(@order)
           return render_error(
-            error: 'Order cannot be cancelled', status: :bad_request,
+            error: "Order cannot be cancelled", status: :bad_request,
             details: {
-              message: 'Order can only be cancelled if it is in a ' \
-                'pending state',
+              message: "Order can only be cancelled if it is in a " \
+                "pending state",
               order: {
                 id: @order.id,
                 status: @order.status
               },
-              next_steps: 'Issue a request for refund if the order is ' \
-                'already processed'
+              next_steps: "Issue a request for refund if the order is " \
+                "already processed"
             }
           )
         end
 
-        @order.update!(status: 'cancelled')
+        @order.update!(status: "cancelled")
 
         PaymentServiceNotifierJob.cancel_order(@order)
 
-        render json: { message: 'Order cancelled successfully' }, status: :ok
+        render json: { message: "Order cancelled successfully" }, status: :ok
       end
 
       # rubocop:disable Metrics/AbcSize
@@ -54,7 +54,7 @@ module Api
                     }
         ) do |collection|
           json_response(
-            collection, message: 'Orders retrieved successfully',
+            collection, message: "Orders retrieved successfully",
                         serializer:
           )
         end
@@ -72,7 +72,7 @@ module Api
         )
 
         render json: json_response(
-          @order, serializer:, message: 'Order retrieved successfully'
+          @order, serializer:, message: "Order retrieved successfully"
         ), status: :ok
       end
 
@@ -99,9 +99,9 @@ module Api
         end
 
         def order_param
-          direction = params[:order] || 'desc'
+          direction = params[:order] || "desc"
 
-          if direction == 'asc'
+          if direction == "asc"
             :asc
           else
             :desc

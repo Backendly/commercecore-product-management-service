@@ -24,7 +24,7 @@ module Api
                           .by_name(params[:name])
                           .by_category(params[:category_id])
                           .by_price_range(params[:min_price],
-                                          params[:max_price])
+                            params[:max_price])
                           .page(page)
                           .per(page_size)
 
@@ -40,7 +40,7 @@ module Api
           }
         ) do |collection|
           json_response(
-            collection, message: 'Products retrieved successfully',
+            collection, message: "Products retrieved successfully",
                         serializer: ProductSerializer
           )
         end
@@ -61,7 +61,7 @@ module Api
 
         render json: json_response(
           @product,
-          message: 'Product retrieved successfully',
+          message: "Product retrieved successfully",
           serializer:
         )
       end
@@ -76,7 +76,7 @@ module Api
 
         render json: json_response(
           product,
-          message: 'Product created successfully',
+          message: "Product created successfully",
           serializer:
         ), status: :created
       end
@@ -88,7 +88,7 @@ module Api
 
         render json: json_response(
           @product,
-          message: 'Product updated successfully',
+          message: "Product updated successfully",
           serializer:
         )
       end
@@ -103,7 +103,7 @@ module Api
       # Uploads images to the product.
       def upload_images
         if @product.images.attach(image_params)
-          render json: { message: 'Images uploaded successfully' }
+          render json: { message: "Images uploaded successfully" }
         else
           render_error(details: @product.errors.full_messages,
                        status: :unprocessable_content)
@@ -113,7 +113,7 @@ module Api
       # Deletes a specific image from the product.
       def delete_image
         @product_image.purge_later
-        render json: { message: 'Image deleted successfully' }, status: :ok
+        render json: { message: "Image deleted successfully" }, status: :ok
       end
 
       private
@@ -156,9 +156,9 @@ module Api
         # Renders an error response for invalid category ID.
         def render_category_error
           render_error(
-            error: 'Category not found',
+            error: "Category not found",
             status: :bad_request,
-            details: { message: 'Verify you have the category you specified' }
+            details: { message: "Verify you have the category you specified" }
           )
         end
 
@@ -175,8 +175,8 @@ module Api
           return unless @product_image.nil?
 
           render_error(
-            error: 'Image not found', status: :not_found, details: {
-              message: 'Verify you have the correct image ID',
+            error: "Image not found", status: :not_found, details: {
+            message: "Verify you have the correct image ID",
               image_id: params[:image_id]
             }
           )

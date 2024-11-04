@@ -29,6 +29,6 @@ class PaymentServiceNotifierJob < ApplicationJob
     end
 
     def publish_channel(order)
-      order.cancelled? ? 'payment_order_cancelled' : 'payment_order_created'
+      order.cancelled? ? "payment_order_cancelled" : "payment_order_created"
     end
 end

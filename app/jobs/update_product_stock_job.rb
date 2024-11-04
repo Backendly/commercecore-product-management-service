@@ -29,7 +29,7 @@ class UpdateProductStockJob < ApplicationJob
     order.order_items.each do |item|
       product = Product.find_by(id: item.product_id)
 
-      action = status == 'refunded' ? 'restore' : 'remove'
+      action = status == "refunded" ? "restore" : "remove"
 
       Rails.logger.info <<~INFO
         Updating stock for product with ID #{product.id}
@@ -37,12 +37,12 @@ class UpdateProductStockJob < ApplicationJob
         Quantity to #{action}: #{item.quantity}
       INFO
 
-      new_stock_quantity = if status == 'refunded'
-                             Rails.logger.info 'Refunding stock'
+      new_stock_quantity = if status == "refunded"
+                             Rails.logger.info "Refunding stock"
                              product.stock_quantity + item.quantity
-                           else
+      else
                              product.stock_quantity - item.quantity
-                           end
+      end
 
       product.update!(
         stock_quantity: new_stock_quantity,

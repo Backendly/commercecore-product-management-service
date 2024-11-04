@@ -122,7 +122,7 @@ RSpec.describe "/api/v1/categories", type: :request do
       end
 
       describe 'Response data body' do
-        let!(:categories) { [Category.first, Category.last] }
+        let!(:categories) { [ Category.first, Category.last ] }
 
         it 'has all the required and follows the JSONAPI standard' do
           get api_v1_categories_url, headers: valid_headers[:first_dev]

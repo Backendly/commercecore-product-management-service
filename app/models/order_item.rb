@@ -16,6 +16,6 @@ class OrderItem < ApplicationRecord
     def product_and_order_belong_to_same_app
       return unless product&.app_id != order&.app_id
 
-      errors.add(:base, 'Product must belong to the same app as the order')
+      errors.add(:base, "Product must belong to the same app as the order")
     end
 end

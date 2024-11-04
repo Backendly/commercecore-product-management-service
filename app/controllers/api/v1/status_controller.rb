@@ -10,9 +10,9 @@ module Api
       # GET /api/v1/status
       def show
         render json: {
-          status: 'ok',
-          service: 'Product Management Service',
-          version: 'v1',
+          status: "ok",
+          service: "Product Management Service",
+          version: "v1",
           timestamp: Time.now.utc,
           environment: Rails.env,
           base_url: "#{request.base_url}/api/v1",
@@ -24,7 +24,7 @@ module Api
       private
 
         def database_status
-          ActiveRecord::Base.connection.active? ? 'connected' : 'disconnected'
+          ActiveRecord::Base.connection.active? ? "connected" : "disconnected"
         end
 
         def uptime
@@ -35,8 +35,8 @@ module Api
           return if ActiveRecord::Base.connection.active?
 
           ActiveRecord::Base.establish_connection
-          Rails.logger.info 'Connected to the database'
-          ActiveRecord::Base.connection.execute('SELECT 1')
+          Rails.logger.info "Connected to the database"
+          ActiveRecord::Base.connection.execute("SELECT 1")
         end
     end
   end
