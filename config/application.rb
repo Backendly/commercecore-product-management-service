@@ -78,5 +78,7 @@ module CommercecoreProductManagementService
                  methods: %i[get post put patch delete options head]
       end
     end
+
+    config.active_support.to_time_preserves_timezone = :zone
   end
 end
