@@ -145,8 +145,6 @@ full list, refer to the **Postman Documentation**.
 
 ---
 
-You can add these details wherever you find it appropriate in your README!
-
 ### **Categories**
 
 - **GET /api/v1/categories**: List all categories.
