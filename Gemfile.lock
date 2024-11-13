@@ -242,7 +242,7 @@ GEM
     rspec-mocks (3.13.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-rails (7.0.1)
+    rspec-rails (7.1.0)
       actionpack (>= 7.0)
       activesupport (>= 7.0)
       railties (>= 7.0)
@@ -280,7 +280,7 @@ GEM
       rubocop-performance
       rubocop-rails
     ruby-progressbar (1.13.0)
-    securerandom (0.3.1)
+    securerandom (0.3.2)
     sidekiq (7.3.5)
       connection_pool (>= 2.3.0)
       logger
@@ -332,7 +332,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 8.0.0)
   redis (>= 4.0.1)
-  rspec-rails (~> 7.0)
+  rspec-rails (~> 7.1)
   rubocop-rails-omakase
   sidekiq (~> 7.3)
   simplecov
