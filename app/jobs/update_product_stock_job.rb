@@ -38,10 +38,10 @@ class UpdateProductStockJob < ApplicationJob
       INFO
 
       new_stock_quantity = if status == "refunded"
-                             Rails.logger.info "Refunding stock"
-                             product.stock_quantity + item.quantity
+        Rails.logger.info "Refunding stock"
+        product.stock_quantity + item.quantity
       else
-                             product.stock_quantity - item.quantity
+        product.stock_quantity - item.quantity
       end
 
       product.update!(

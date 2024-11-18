@@ -17,19 +17,21 @@ module Api
 
         if @cart_item.persisted? && @cart_item.errors.empty?
           message = if is_new_record
-                      "Cart item created successfully"
+            "Cart item created successfully"
           else
-                      "Cart item updated successfully"
+            "Cart item updated successfully"
           end
           status = is_new_record ? :created : :ok
 
           render json: json_response(
             @cart_item, serializer: CartItemSerializer,
-                        message:, status:
+                        message:, status:,
           ), status:
         else
-          render_error(status: :unprocessable_content,
-                       details: @cart_item.errors)
+          render_error(
+            status: :unprocessable_content,
+            details: @cart_item.errors,
+          )
         end
       end
 
@@ -45,7 +47,7 @@ module Api
       def show
         return unless stale?(
           last_modified: @cart_item.updated_at,
-          public: true
+          public: true,
         )
 
         render json: json_response(@cart_item, serializer:)
@@ -55,7 +57,7 @@ module Api
       def index
         render json: json_response(
           @cart.cart_items,
-          serializer:, message: "Cart items retrieved successfully"
+          serializer:, message: "Cart items retrieved successfully",
         )
       end
 
@@ -91,8 +93,10 @@ module Api
         #   valid_product? # => false if product_id is nil or invalid
         def valid_product?
           if cart_item_params[:product_id].nil?
-            render_error(status: :unprocessable_content,
-              details: { product_id: "must be provided" })
+            render_error(
+              status: :unprocessable_content,
+              details: { product_id: "must be provided" },
+            )
             return false
           end
 
@@ -102,8 +106,10 @@ module Api
           end
 
           if product.nil?
-            render_error(status: :unprocessable_content,
-              details: { product: "must exist" })
+            render_error(
+              status: :unprocessable_content,
+              details: { product: "must exist" },
+            )
             return false
           end
 
@@ -112,7 +118,7 @@ module Api
               status: :unprocessable_content,
               details: {
                 product: "must be associated with the app"
-              }
+              },
             )
             return false
           end
@@ -121,9 +127,9 @@ module Api
             render_error(
               error: "Invalid quantity",
               status: :unprocessable_content, details: {
-              quantity: "must be less than or equal to the stock",
+                quantity: "must be less than or equal to the stock",
                 stock_quantity: product.stock_quantity
-              }
+              },
             )
             return false
           end

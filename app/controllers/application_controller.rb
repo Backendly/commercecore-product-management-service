@@ -65,10 +65,10 @@ class ApplicationController < ActionController::API
     def duplicate_object(error)
       match_data = error.message.match(/Key \((.+)\)=\((.+)\) already exists/)
       details = if match_data
-                  field, value = match_data.captures
-                  "A record with #{field} '#{value}' already exists."
+        field, value = match_data.captures
+        "A record with #{field} '#{value}' already exists."
       else
-                  "A record with that name already exists."
+        "A record with that name already exists."
       end
 
       render_error(error: "Duplicate record found",

@@ -13,27 +13,27 @@ module Api
       # rubocop:disable Metrics/MethodLength
 
       def cancel
-        unless cancellable?(@order)
-          return render_error(
+        if cancellable?(@order)
+          @order.update!(status: "cancelled")
+
+          PaymentServiceNotifierJob.cancel_order(@order)
+
+          render json: { message: "Order cancelled successfully" }, status: :ok
+        else
+          render_error(
             error: "Order cannot be cancelled", status: :bad_request,
             details: {
               message: "Order can only be cancelled if it is in a " \
-                "pending state",
+              "pending state",
               order: {
                 id: @order.id,
                 status: @order.status
               },
               next_steps: "Issue a request for refund if the order is " \
-                "already processed"
-            }
+              "already processed"
+            },
           )
         end
-
-        @order.update!(status: "cancelled")
-
-        PaymentServiceNotifierJob.cancel_order(@order)
-
-        render json: { message: "Order cancelled successfully" }, status: :ok
       end
 
       # rubocop:disable Metrics/AbcSize
@@ -47,15 +47,15 @@ module Api
 
         response = cache_collection(
           @orders,
-          base_key, page:, page_size:,
-                    filters: {
-                      status: params[:status],
-                      order: order_param
-                    }
+          base_key,
+          page:, page_size:,
+          filters: {
+            status: params[:status],
+            order: order_param
+          },
         ) do |collection|
           json_response(
-            collection, message: "Orders retrieved successfully",
-                        serializer:
+            collection, message: "Orders retrieved successfully", serializer:,
           )
         end
 
@@ -67,12 +67,13 @@ module Api
 
       def show
         return unless stale?(
-          @order, last_modified: @order.updated_at,
-                  public: true
+          @order,
+          last_modified: @order.updated_at,
+          public: true,
         )
 
         render json: json_response(
-          @order, serializer:, message: "Order retrieved successfully"
+          @order, serializer:, message: "Order retrieved successfully",
         ), status: :ok
       end
 
@@ -81,7 +82,7 @@ module Api
         def set_order
           @order = Order.find_by!(
             id: params[:id], user_id: @cart.user_id,
-            app_id: @cart.app_id
+            app_id: @cart.app_id,
           )
         end
 
