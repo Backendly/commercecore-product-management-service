@@ -29,13 +29,13 @@ class SizeValidator < ActiveModel::EachValidator
     return if value.nil? || !value.respond_to?(:each)
 
     value.each do |file|
-      unless file.respond_to?(:byte_size) &&
-             file.byte_size > options[:max_size]
-        next
-      end
+      next unless file.respond_to?(:byte_size) &&
+                  file.byte_size > options[:max_size]
 
-      message = options[:message] || "is too large. Maximum size allowed " \
-        "is #{options[:max_size]} bytes."
+      # rubocop:disable Layout/LineLength
+      message = options[:message] ||
+                "is too large. Maximum size allowed is #{options[:max_size]} bytes."
+      # rubocop:enable Layout/LineLength
       record.errors.add(attribute, message)
     end
   end
