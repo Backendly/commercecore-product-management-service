@@ -5,7 +5,9 @@ class Product < ApplicationRecord
   include WordCountValidatable
 
   scope :by_name, lambda { |name|
-    where("name ILIKE ?", "%#{name}%") if name.present?
+    if name.present?
+      where("name ILIKE ?", "%" + Product.sanitize_sql_like(name) + "%")
+    end
   }
   scope :by_category, lambda { |category_id|
     where(category_id:) if category_id.present?
