@@ -20,7 +20,6 @@ module JsonResponse
     resource, serializer:, message: "Request successful",
     extra_meta: {}, status: nil
   )
-
     code = status_code(status)
     metadata = {
       status_code: code,
