@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Api
+module API
   module V1
     # Order Items Controller
     class OrderItemsController < ApplicationController
@@ -15,19 +15,19 @@ module Api
 
         render json: json_response(
           @order_items, message: "Order items retrieved successfully",
-                        serializer: OrderItemSerializer
+                        serializer: OrderItemSerializer,
         ), status: :ok
       end
 
       def show
         return unless stale?(
           @order_item,
-          last_modified: @order_item.updated_at, public: true
+          last_modified: @order_item.updated_at, public: true,
         )
 
         render json: json_response(
           @order_item, message: "Order item retrieved successfully",
-                       serializer: OrderItemSerializer
+                       serializer: OrderItemSerializer,
         ), status: :ok
       end
 
@@ -36,7 +36,7 @@ module Api
         def set_order_item
           @order_item = OrderItem.find_by!(
             id: params[:id],
-            order_id: @order.id
+            order_id: @order.id,
           )
         end
 

@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-require 'support/shared_contexts'
+require "rails_helper"
+require "support/shared_contexts"
 
-RSpec.describe "Api::V1::Checkout", type: :request do
-  include_context 'common data'
+RSpec.describe "API::V1::Checkout", type: :request do
+  include_context "common data"
 
   before do
-    mock_authentication(controller_class: Api::V1::CheckoutController)
+    mock_authentication(controller_class: API::V1::CheckoutController)
   end
 
   describe "POST /api/v1/cart/checkout" do
     before do
       mock_authentication(
-        controller_class: Api::V1::CheckoutController,
+        controller_class: API::V1::CheckoutController,
         user_id: users.dig(:one, :id),
         app_id: developers.dig(:first, :app_id),
-        developer_id: developers.dig(:first, :id)
+        developer_id: developers.dig(:first, :id),
       )
     end
 
@@ -33,7 +33,7 @@ RSpec.describe "Api::V1::Checkout", type: :request do
       let!(:products) do
         FactoryBot.create_list(
           :product, 10,
-          app_id: developers.dig(:first, :app_id)
+          app_id: developers.dig(:first, :app_id),
         )
       end
       let!(:product) { products.first }
@@ -41,13 +41,13 @@ RSpec.describe "Api::V1::Checkout", type: :request do
       let!(:cart) do
         FactoryBot.create(
           :cart, app_id: product.app_id,
-                 user_id: users.dig(:one, :id)
+                 user_id: users.dig(:one, :id),
         )
       end
       let!(:more) do
         products.each do |product|
           FactoryBot.create(
-            :cart_item, cart:, product:
+            :cart_item, cart:, product:,
           )
         end
       end
@@ -59,7 +59,7 @@ RSpec.describe "Api::V1::Checkout", type: :request do
         expect(response).to have_http_status(:created)
       end
 
-      it 'the type of the object is an order' do
+      it "the type of the object is an order" do
         post checkout_api_v1_cart_path, headers: valid_headers[:first_dev]
 
         expect(response_body.dig(:data, :type)).to eq("order")
@@ -78,11 +78,11 @@ RSpec.describe "Api::V1::Checkout", type: :request do
       it "has a default status of 'pending'" do
         post checkout_api_v1_cart_path, headers: valid_headers[:first_dev]
 
-        expect(response_body.dig(:data, :attributes, :status)).to eq('pending')
+        expect(response_body.dig(:data, :attributes, :status)).to eq("pending")
       end
 
-      context 'when the cart items are moved to the order' do
-        it 'has the same number items in the cart item' do
+      context "when the cart items are moved to the order" do
+        it "has the same number items in the cart item" do
           post checkout_api_v1_cart_path, headers: valid_headers[:first_dev]
 
           expect(response).to have_http_status(:created)
@@ -91,7 +91,7 @@ RSpec.describe "Api::V1::Checkout", type: :request do
           ).count).to eq(cart_items.count)
         end
 
-        it 'has the same information as the cart items' do
+        it "has the same information as the cart items" do
           post checkout_api_v1_cart_path, headers: valid_headers[:first_dev]
 
           expect(response).to have_http_status(:created)
@@ -120,15 +120,15 @@ RSpec.describe "Api::V1::Checkout", type: :request do
         )
       end
 
-      it 'notifies the payment service' do
+      it "notifies the payment service" do
         expect(PaymentServiceNotifierJob).to \
           receive(:perform_now).and_call_original
 
         post checkout_api_v1_cart_path, headers: valid_headers[:first_dev]
       end
 
-      context 'when the user has a pending order' do
-        it 'returns an error' do
+      context "when the user has a pending order" do
+        it "returns an error" do
           post checkout_api_v1_cart_path, headers: valid_headers[:first_dev]
 
           # the first call successful creates the order
@@ -139,7 +139,7 @@ RSpec.describe "Api::V1::Checkout", type: :request do
 
           expect(response).to have_http_status(:payment_required)
           expect(response_body[:error]).to eq(
-            'You already have an order in a pending state'
+            "You already have an order in a pending state"
           )
         end
       end

@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-require 'support/shared_contexts'
+require "rails_helper"
+require "support/shared_contexts"
 
-RSpec.describe "Api::V1::Orders", type: :request do
-  include_context 'common data'
+RSpec.describe "API::V1::Orders", type: :request do
+  include_context "common data"
 
   before do
-    mock_authentication(controller_class: Api::V1::OrdersController)
+    mock_authentication(controller_class: API::V1::OrdersController)
   end
 
-  describe 'Endpoints' do
+  describe "Endpoints" do
     before do
       @app_id = developers.dig(:first, :app_id)
       @user_id = users.dig(:one, :id)
@@ -26,16 +26,16 @@ RSpec.describe "Api::V1::Orders", type: :request do
       end
 
       mock_authentication(
-        controller_class: Api::V1::OrdersController,
+        controller_class: API::V1::OrdersController,
         app_id: @app_id,
         developer_id: @developer_id,
-        user_id: @user_id
+        user_id: @user_id,
       )
     end
 
     describe "GET /api/v1/orders" do
-      context 'when no orders has been placed' do
-        it 'returns a successful response with an empty data' do
+      context "when no orders has been placed" do
+        it "returns a successful response with an empty data" do
           get api_v1_orders_path, headers: valid_headers[:first_dev]
 
           expect(response).to have_http_status(:ok)
@@ -43,7 +43,7 @@ RSpec.describe "Api::V1::Orders", type: :request do
         end
       end
 
-      context 'when at least one order has been placed' do
+      context "when at least one order has been placed" do
         before do
           # checkout
           post checkout_api_v1_cart_path, headers: valid_headers[:first_dev]
@@ -57,17 +57,17 @@ RSpec.describe "Api::V1::Orders", type: :request do
           expect(response).to have_http_status(200)
         end
 
-        it 'has some data in the JSON response' do
+        it "has some data in the JSON response" do
           get api_v1_orders_path, headers: valid_headers[:first_dev]
 
           expect(response_body[:data]).to_not be_empty
         end
 
-        describe 'ordering' do
+        describe "ordering" do
           context 'when the "asc" query parameter is specified' do
-            it 'returns the orders in ascending order' do
+            it "returns the orders in ascending order" do
               get api_v1_orders_path, headers: valid_headers[:first_dev],
-                                      params: { order: 'asc' }
+                                      params: { order: "asc" }
 
               expect(response).to have_http_status(:ok)
               data = response_body[:data]
@@ -76,8 +76,8 @@ RSpec.describe "Api::V1::Orders", type: :request do
           end
         end
 
-        describe 'filtering' do
-          context 'when filtered by orders with available entries' do
+        describe "filtering" do
+          context "when filtered by orders with available entries" do
             %w[pending cancelled processing successful
                failed].each do |status|
               it "returns only orders with the status: #{status}" do
@@ -93,11 +93,11 @@ RSpec.describe "Api::V1::Orders", type: :request do
             end
           end
 
-          context 'when no pending orders are available' do
-            it 'returns an empty data' do
-              @order.update(status: 'processing')
+          context "when no pending orders are available" do
+            it "returns an empty data" do
+              @order.update(status: "processing")
               get api_v1_orders_path, headers: valid_headers[:first_dev],
-                                      params: { status: 'pending' }
+                                      params: { status: "pending" }
 
               expect(response).to have_http_status(:ok)
               expect(response_body[:data]).to be_empty
@@ -105,15 +105,15 @@ RSpec.describe "Api::V1::Orders", type: :request do
           end
         end
 
-        describe 'response body' do
+        describe "response body" do
           before do
             get api_v1_orders_path, headers: valid_headers[:first_dev]
             @data = response_body[:data].first
           end
 
-          it 'returns the order details' do
+          it "returns the order details" do
             expect(@data[:id]).to eq(@order.id)
-            expect(@data[:type]).to eq('order')
+            expect(@data[:type]).to eq("order")
             expect(@data.dig(:attributes, :status)).to eq(@order.status)
             expect(@data.dig(:attributes, :total_amount)).to eq(
               @order.total_amount.to_s
@@ -126,21 +126,21 @@ RSpec.describe "Api::V1::Orders", type: :request do
             )
           end
 
-          it 'returns the order links' do
+          it "returns the order links" do
             expect(@data[:links][:self]).to eq(
-              api_v1_order_url(@order, host: 'test-server.com')
+              api_v1_order_url(@order, host: "test-server.com")
             )
             expect(@data[:links][:related]).to eq(
-              api_v1_order_items_url(@order, host: 'test-server.com')
+              api_v1_order_items_url(@order, host: "test-server.com")
             )
           end
         end
       end
     end
 
-    describe 'GET /api/v1/orders/:id' do
-      context 'when the order does not exist' do
-        it 'returns a not found response' do
+    describe "GET /api/v1/orders/:id" do
+      context "when the order does not exist" do
+        it "returns a not found response" do
           get api_v1_order_path(UUID7.generate),
               headers: valid_headers[:first_dev]
 
@@ -148,7 +148,7 @@ RSpec.describe "Api::V1::Orders", type: :request do
         end
       end
 
-      context 'when the order exists' do
+      context "when the order exists" do
         before do
           # checkout
           post checkout_api_v1_cart_path, headers: valid_headers[:first_dev]
@@ -157,13 +157,13 @@ RSpec.describe "Api::V1::Orders", type: :request do
           @order = Order.last
         end
 
-        it 'returns a success response' do
+        it "returns a success response" do
           get api_v1_order_path(@order.id), headers: valid_headers[:first_dev]
 
           expect(response).to have_http_status(:ok)
         end
 
-        it 'has some data in the JSON response' do
+        it "has some data in the JSON response" do
           get api_v1_order_path(@order.id), headers: valid_headers[:first_dev]
 
           expect(response_body[:data]).to_not be_empty
@@ -171,9 +171,9 @@ RSpec.describe "Api::V1::Orders", type: :request do
       end
     end
 
-    describe 'POST /api/v1/orders/:id/cancel' do
-      context 'when the order does not exist' do
-        it 'returns a not found response' do
+    describe "POST /api/v1/orders/:id/cancel" do
+      context "when the order does not exist" do
+        it "returns a not found response" do
           post cancel_api_v1_order_path(UUID7.generate),
                headers: valid_headers[:first_dev]
 
@@ -181,7 +181,7 @@ RSpec.describe "Api::V1::Orders", type: :request do
         end
       end
 
-      context 'when the order exists' do
+      context "when the order exists" do
         before do
           # checkout
           post checkout_api_v1_cart_path, headers: valid_headers[:first_dev]
@@ -190,24 +190,24 @@ RSpec.describe "Api::V1::Orders", type: :request do
           @order = Order.last
         end
 
-        context 'when the order is pending' do
-          it 'returns a success response' do
+        context "when the order is pending" do
+          it "returns a success response" do
             post cancel_api_v1_order_path(@order.id),
                  headers: valid_headers[:first_dev]
 
             expect(response).to have_http_status(:ok)
           end
 
-          it 'returns a success message' do
+          it "returns a success message" do
             post cancel_api_v1_order_path(@order.id),
                  headers: valid_headers[:first_dev]
 
             expect(response_body[:message]).to eq(
-              'Order cancelled successfully'
+              "Order cancelled successfully"
             )
           end
 
-          it 'publishes a message to the payment service' do
+          it "publishes a message to the payment service" do
             expect(PaymentServiceNotifierJob).to receive(:cancel_order)
               .with(@order)
 
@@ -216,9 +216,9 @@ RSpec.describe "Api::V1::Orders", type: :request do
           end
         end
 
-        context 'when the order is not pending' do
-          it 'returns a bad request response' do
-            @order.update(status: 'processing')
+        context "when the order is not pending" do
+          it "returns a bad request response" do
+            @order.update(status: "processing")
 
             post cancel_api_v1_order_path(@order.id),
                  headers: valid_headers[:first_dev]

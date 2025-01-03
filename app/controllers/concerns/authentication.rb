@@ -36,13 +36,13 @@ module Authentication
     end
 
     def skip_user_id_verification?
-      is_a?(Api::V1::CategoriesController)
+      is_a?(API::V1::CategoriesController)
     end
 
     # rubocop:disable Metrics/MethodLength
     def verify_developer_token!
       cached_developer = user_service_client.fetch_developer_id(
-        developer_token:
+        developer_token:,
       )
 
       if cached_developer
@@ -53,9 +53,9 @@ module Authentication
           details: {
             error: "Invalid developer token",
             message: "Please provide a valid developer token in the header. " \
-              "E.g., X-Developer-Token: <developer_token>"
+            "E.g., X-Developer-Token: <developer_token>"
           },
-          status: :unauthorized
+          status: :unauthorized,
         )
         false
       end
@@ -63,7 +63,7 @@ module Authentication
 
     def verify_user_id!
       cached_user = user_service_client.fetch_user(
-        user_id:, app_id:, developer_token:
+        user_id:, app_id:, developer_token:,
       )
 
       if cached_user
@@ -74,9 +74,9 @@ module Authentication
           details: {
             error: "Invalid user ID",
             message: "Please provide a valid user ID. " \
-              "E.g., X-User-Id: <user_id>"
+            "E.g., X-User-Id: <user_id>"
           },
-          status: :unauthorized
+          status: :unauthorized,
         )
         false
       end
@@ -92,7 +92,7 @@ module Authentication
           error: "Invalid app ID",
           message: "Please provide a valid app ID. E.g., X-App-Id: <app_id>"
         },
-        status: :unauthorized
+        status: :unauthorized,
       )
     end
 

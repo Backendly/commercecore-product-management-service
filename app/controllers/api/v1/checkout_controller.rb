@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Api
+module API
   module V1
     # Checkout Controller
     class CheckoutController < ApplicationController
@@ -27,8 +27,8 @@ module Api
           serializer: OrderSerializer,
           extra_meta: {
             info: "Checkout in progress. Please complete the payment " \
-              "to confirm the order"
-          }
+            "to confirm the order"
+          },
         ), status: :created
       end
 
@@ -46,7 +46,7 @@ module Api
               error: "Cart is empty or does not exist",
               details: { errors: @cart.errors.full_messages,
                          cart_item_count: @cart.cart_items.count },
-              status: :unprocessable_content
+              status: :unprocessable_content,
             )
             return false
           end
@@ -75,7 +75,7 @@ module Api
           order = Order.where(
             user_id: @cart.user_id,
             app_id: @cart.app_id,
-            status: %w[pending processing]
+            status: %w[pending processing],
           ).first
 
           if order
@@ -86,8 +86,8 @@ module Api
                 order_id: order.id,
                 next_steps: "Please complete the payment to confirm the order",
                 alternative: "You can cancel the #{order.status} order and " \
-                  "create a new one"
-              }
+                "create a new one"
+              },
             )
 
             return false
@@ -104,7 +104,7 @@ module Api
             developer_id: @cart.developer_id,
             app_id: @cart.app_id,
             total_amount: calculate_total_amount(@cart),
-            status: "pending"
+            status: "pending",
           )
         end
 
@@ -113,7 +113,7 @@ module Api
             order.order_items.create!(
               product_id: cart_item.product_id,
               quantity: cart_item.quantity,
-              price_at_purchase: cart_item.product.price
+              price_at_purchase: cart_item.product.price,
             )
           end
         end

@@ -1,43 +1,43 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-require 'support/shared_contexts'
+require "rails_helper"
+require "support/shared_contexts"
 
-RSpec.describe "/api/v1/categories", type: :request do
-  include_context 'common data'
+RSpec.describe "API::V1::Categories", type: :request do
+  include_context "common data"
 
   before do
     allow_any_instance_of(UserServiceClient).to \
       receive(:fetch_developer_id).and_return(nil)
 
-    allow_any_instance_of(Api::V1::CategoriesController).to \
+    allow_any_instance_of(API::V1::CategoriesController).to \
       receive(:developer_id).and_return(nil)
   end
 
   let(:valid_attributes) do
     {
-      name: 'Home Appliance',
-      description: 'Everything home appliance goes here'
+      name: "Home Appliance",
+      description: "Everything home appliance goes here"
     }
   end
 
   let(:invalid_attributes) do
-    { name: '', description: '' } # no category name and description
+    { name: "", description: "" } # no category name and description
   end
 
-  context 'with valid developer token: using first dev' do
+  context "with valid developer token: using first dev" do
     let(:expected_developer_id) { developers.dig(:first, :id) }
 
     before do
       allow_any_instance_of(UserServiceClient).to \
         receive(:fetch_developer_id).and_return(expected_developer_id)
 
-      allow_any_instance_of(Api::V1::CategoriesController).to \
+      allow_any_instance_of(API::V1::CategoriesController).to \
         receive(:developer_id).and_return(expected_developer_id)
     end
 
     # ensure that there are two categories at the start of the test
-    it 'starts with 2 categories in the database' do
+    it "starts with 2 categories in the database" do
       expect(Category.count).to eq(2)
     end
 
@@ -47,7 +47,7 @@ RSpec.describe "/api/v1/categories", type: :request do
         expect(response).to be_successful
       end
 
-      it 'gets the right developer ID from the user service' do
+      it "gets the right developer ID from the user service" do
         get api_v1_categories_url, headers: valid_headers[:first_dev]
 
         data = response_body[:data][0]
@@ -60,7 +60,7 @@ RSpec.describe "/api/v1/categories", type: :request do
         expect(response_body).to have_key(:data)
       end
 
-      it 'contains RESTful meta information' do
+      it "contains RESTful meta information" do
         get api_v1_categories_url, headers: valid_headers[:first_dev]
         expect(response).to have_http_status(:ok)
 
@@ -70,8 +70,8 @@ RSpec.describe "/api/v1/categories", type: :request do
         expect(meta).to include(:message, :total_count, :current_count)
       end
 
-      describe 'Pagination' do
-        it 'contains pagination links' do
+      describe "Pagination" do
+        it "contains pagination links" do
           get api_v1_categories_url, headers: valid_headers[:first_dev]
 
           expect(response).to have_http_status(:ok)
@@ -97,7 +97,7 @@ RSpec.describe "/api/v1/categories", type: :request do
           )
         end
 
-        it 'responds to page_size query parameter' do
+        it "responds to page_size query parameter" do
           get api_v1_categories_url, params: { page_size: 1 },
                                      headers: valid_headers[:first_dev]
 
@@ -109,7 +109,7 @@ RSpec.describe "/api/v1/categories", type: :request do
           expect(response_body[:data].size).to eq(1)
         end
 
-        it 'limits the page size to 100' do
+        it "limits the page size to 100" do
           get api_v1_categories_url, params: { page_size: 101 },
                                      headers: valid_headers[:first_dev]
 
@@ -121,10 +121,10 @@ RSpec.describe "/api/v1/categories", type: :request do
         end
       end
 
-      describe 'Response data body' do
+      describe "Response data body" do
         let!(:categories) { [ Category.first, Category.last ] }
 
-        it 'has all the required and follows the JSONAPI standard' do
+        it "has all the required and follows the JSONAPI standard" do
           get api_v1_categories_url, headers: valid_headers[:first_dev]
 
           expect(response).to have_http_status(:ok)
@@ -148,7 +148,7 @@ RSpec.describe "/api/v1/categories", type: :request do
           end
         end
 
-        it 'has the same data as the ones stored in the database' do
+        it "has the same data as the ones stored in the database" do
           get api_v1_categories_url, headers: valid_headers[:first_dev]
 
           expect(response).to have_http_status(:ok)
@@ -170,7 +170,7 @@ RSpec.describe "/api/v1/categories", type: :request do
           end
         end
 
-        it 'contains only the resources owned by the authenticated developer' do
+        it "contains only the resources owned by the authenticated developer" do
           get api_v1_categories_url, headers: valid_headers[:first_dev]
 
           expect(response).to have_http_status(:ok)
@@ -186,18 +186,18 @@ RSpec.describe "/api/v1/categories", type: :request do
         end
       end
 
-      context 'with query parameters in the request path' do
+      context "with query parameters in the request path" do
         before do
           Category.create!(
-            name: 'Body lotions', description: 'Skin care products',
-            developer_id: developers.dig(:first, :id)
+            name: "Body lotions", description: "Skin care products",
+            developer_id: developers.dig(:first, :id),
           ).reload
         end
 
-        context 'with filters based on the name' do
-          it 'filters the categories based on the name' do
+        context "with filters based on the name" do
+          it "filters the categories based on the name" do
             get api_v1_categories_url,
-                params: { name: 'lotions' },
+                params: { name: "lotions" },
                 headers: valid_headers[:first_dev]
 
             expect(response).to have_http_status(:ok)
@@ -206,21 +206,21 @@ RSpec.describe "/api/v1/categories", type: :request do
             response_data = response_body[:data]
 
             expect(response_data.first.dig(:attributes, :name)).to \
-              eq('Body lotions')
+              eq("Body lotions")
           end
 
-          it 'returns an empty array when no match is found' do
+          it "returns an empty array when no match is found" do
             get api_v1_categories_url,
-                params: { name: 'blah' },
+                params: { name: "blah" },
                 headers: valid_headers[:first_dev]
 
             expect(response).to have_http_status(:ok)
             expect(response_body[:data].size).to eq(0)
           end
 
-          it 'returns all categories when the filter is not found' do
+          it "returns all categories when the filter is not found" do
             get api_v1_categories_url,
-                params: { unknown: 'Body lotions' },
+                params: { unknown: "Body lotions" },
                 headers: valid_headers[:first_dev]
 
             expect(response).to have_http_status(:ok)
@@ -229,9 +229,9 @@ RSpec.describe "/api/v1/categories", type: :request do
         end
 
         context "with filters based on the 'search' keyword" do
-          it 'returns all categories with the searched keyword' do
+          it "returns all categories with the searched keyword" do
             get api_v1_categories_url,
-                params: { search: 'kitchen' },
+                params: { search: "kitchen" },
                 headers: valid_headers[:first_dev]
 
             expect(response).to have_http_status(:ok)
@@ -240,7 +240,7 @@ RSpec.describe "/api/v1/categories", type: :request do
             response_data = response_body[:data]
 
             expect(response_data.first.dig(:attributes, :name)).to \
-              eq('Kitchen Appliances')
+              eq("Kitchen Appliances")
           end
         end
       end
@@ -292,7 +292,7 @@ RSpec.describe "/api/v1/categories", type: :request do
               developers.dig(:second, :id)
             )
 
-          allow_any_instance_of(Api::V1::CategoriesController).to \
+          allow_any_instance_of(API::V1::CategoriesController).to \
             receive(:developer_id).and_return(developers.dig(:second, :id))
 
           get api_v1_category_url(first_dev_category_kitchen),
@@ -309,7 +309,7 @@ RSpec.describe "/api/v1/categories", type: :request do
               developers.dig(:second, :id)
             )
 
-          allow_any_instance_of(Api::V1::CategoriesController).to \
+          allow_any_instance_of(API::V1::CategoriesController).to \
             receive(:developer_id).and_return(developers.dig(:second, :id))
         end
 
@@ -353,7 +353,7 @@ RSpec.describe "/api/v1/categories", type: :request do
         end
 
         it "rejects requests from developers who do not own the category" do
-          allow_any_instance_of(Api::V1::CategoriesController).to \
+          allow_any_instance_of(API::V1::CategoriesController).to \
             receive(:developer_id).and_return(developers.dig(:first, :id))
 
           get api_v1_category_url(second_dev_category_computers),
@@ -370,15 +370,15 @@ RSpec.describe "/api/v1/categories", type: :request do
               post api_v1_categories_url,
                    params: {
                      category: {
-                       name: 'Body Lotions',
-                       description: 'This category is for skin care products'
+                       name: "Body Lotions",
+                       description: "This category is for skin care products"
                      }
                    },
                    headers: valid_headers[:first_dev], as: :json
             end.to change(Category, :count).by(1)
 
             expect(response).to have_http_status(:created)
-            expect(response.content_type).to include('application/json')
+            expect(response.content_type).to include("application/json")
 
             expect(response_body[:data]).to include(:id, :type, :attributes)
             expect(response_body[:data][:attributes]).to include(
@@ -390,10 +390,10 @@ RSpec.describe "/api/v1/categories", type: :request do
             response_data = response_body[:data]
 
             expect(response_data.dig(:attributes,
-                                     :name)).to eq('Body Lotions')
+                                     :name)).to eq("Body Lotions")
           end
 
-          it 'sends a 409 error when duplicates are attempted' do
+          it "sends a 409 error when duplicates are attempted" do
             expect do
               post api_v1_categories_url,
                    params: {
@@ -414,8 +414,8 @@ RSpec.describe "/api/v1/categories", type: :request do
             post api_v1_categories_url,
                  params: {
                    category: {
-                     name: 'Body Lotions',
-                     description: 'This category is for skin care products'
+                     name: "Body Lotions",
+                     description: "This category is for skin care products"
                    }
                  },
                  headers: valid_headers[:first_dev], as: :json
@@ -448,8 +448,8 @@ RSpec.describe "/api/v1/categories", type: :request do
         context "with valid parameters" do
           let(:new_attributes) do
             {
-              description: 'This category holds all home appliances products',
-              name: 'UK Home-used Appliances'
+              description: "This category holds all home appliances products",
+              name: "UK Home-used Appliances"
             }
           end
 
@@ -477,7 +477,7 @@ RSpec.describe "/api/v1/categories", type: :request do
           end
 
           it "rejects updates from developers who do not own the category" do
-            allow_any_instance_of(Api::V1::CategoriesController).to \
+            allow_any_instance_of(API::V1::CategoriesController).to \
               receive(:developer_id).and_return(developers.dig(:second, :id))
 
             patch api_v1_category_url(first_dev_category_kitchen),
@@ -512,7 +512,7 @@ RSpec.describe "/api/v1/categories", type: :request do
           expect(response).to have_http_status(:no_content)
         end
 
-        it 'returns 404 when the requested category is not found' do
+        it "returns 404 when the requested category is not found" do
           expect do
             delete api_v1_category_url(UUID7.generate),
                    headers: valid_headers[:first_dev], as: :json
@@ -521,7 +521,7 @@ RSpec.describe "/api/v1/categories", type: :request do
           expect(response).to have_http_status(:not_found)
         end
 
-        it 'returns an empty response body on success' do
+        it "returns an empty response body on success" do
           expect do
             delete api_v1_category_url(first_dev_category_kitchen),
                    headers: valid_headers[:first_dev],
@@ -533,7 +533,7 @@ RSpec.describe "/api/v1/categories", type: :request do
         end
 
         it "rejects deletions from developers who do not own the category" do
-          allow_any_instance_of(Api::V1::CategoriesController).to \
+          allow_any_instance_of(API::V1::CategoriesController).to \
             receive(:developer_id).and_return(developers.dig(:second, :id))
           delete api_v1_category_url(first_dev_category_kitchen),
                  headers: valid_headers[:second_dev], as: :json
@@ -546,15 +546,15 @@ RSpec.describe "/api/v1/categories", type: :request do
     end
   end
 
-  context 'with an invalid or missing developer token' do
-    describe '/index' do
-      it 'returns a 401 with no dev token' do
+  context "with an invalid or missing developer token" do
+    describe "/index" do
+      it "returns a 401 with no dev token" do
         get api_v1_categories_url
 
         expect(response).to have_http_status(:unauthorized)
       end
 
-      it 'returns 401 for invalid developer token' do
+      it "returns 401 for invalid developer token" do
         get api_v1_categories_url,
             headers: { 'X-Developer-Token': UUID7.generate }
 
@@ -562,14 +562,14 @@ RSpec.describe "/api/v1/categories", type: :request do
       end
     end
 
-    describe '/create' do
-      it 'returns a 401 when developer token is not provided' do
+    describe "/create" do
+      it "returns a 401 when developer token is not provided" do
         post api_v1_categories_url, params: { category: valid_attributes }
 
         expect(response).to have_http_status(:unauthorized)
       end
 
-      it 'returns 401 for invalid developer token' do
+      it "returns 401 for invalid developer token" do
         post api_v1_categories_url,
              params: { category: valid_attributes },
              headers: { 'X-Developer-Token': UUID7.generate }
@@ -578,14 +578,14 @@ RSpec.describe "/api/v1/categories", type: :request do
       end
     end
 
-    describe '/show' do
-      it 'returns a 401 with no dev token' do
+    describe "/show" do
+      it "returns a 401 with no dev token" do
         get api_v1_category_url(UUID7.generate)
 
         expect(response).to have_http_status(:unauthorized)
       end
 
-      it 'returns 401 for invalid developer token' do
+      it "returns 401 for invalid developer token" do
         get api_v1_category_url(UUID7.generate),
             headers: { 'X-Developer-Token': UUID7.generate }
 
@@ -593,8 +593,8 @@ RSpec.describe "/api/v1/categories", type: :request do
       end
     end
 
-    describe '/update (PUT | PATCH)' do
-      it 'returns a 401 when developer token is not provided' do
+    describe "/update (PUT | PATCH)" do
+      it "returns a 401 when developer token is not provided" do
         put api_v1_category_url(UUID7.generate),
             params: { category: valid_attributes }
 
@@ -606,7 +606,7 @@ RSpec.describe "/api/v1/categories", type: :request do
         expect(response).to have_http_status(:unauthorized)
       end
 
-      it 'returns 401 for invalid developer token' do
+      it "returns 401 for invalid developer token" do
         put api_v1_categories_url,
             params: { category: valid_attributes },
             headers: { 'X-Developer-Token': UUID7.generate }
@@ -621,14 +621,14 @@ RSpec.describe "/api/v1/categories", type: :request do
       end
     end
 
-    describe '/destroy' do
-      it 'returns a 401 with no dev token' do
+    describe "/destroy" do
+      it "returns a 401 with no dev token" do
         delete api_v1_category_url(UUID7.generate)
 
         expect(response).to have_http_status(:unauthorized)
       end
 
-      it 'returns 401 for invalid developer token' do
+      it "returns 401 for invalid developer token" do
         delete api_v1_category_url(UUID7.generate),
                headers: { 'X-Developer-Token': UUID7.generate }
 

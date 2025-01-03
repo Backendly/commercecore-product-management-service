@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-require 'support/shared_contexts'
+require "rails_helper"
+require "support/shared_contexts"
 
-RSpec.describe "Api::V1::OrderItems", type: :request do
-  include_context 'common data'
+RSpec.describe "API::V1::OrderItems", type: :request do
+  include_context "common data"
 
   before do
-    mock_authentication(controller_class: Api::V1::OrderItemsController)
+    mock_authentication(controller_class: API::V1::OrderItemsController)
   end
 
   let!(:user_id) { users.dig(:one, :id) }
@@ -22,13 +22,13 @@ RSpec.describe "Api::V1::OrderItems", type: :request do
   end
   let!(:order_item) { order_items.first }
 
-  context 'with authenticated user' do
+  context "with authenticated user" do
     before do
       mock_authentication(
-        controller_class: Api::V1::OrderItemsController,
+        controller_class: API::V1::OrderItemsController,
         app_id:,
         user_id:,
-        developer_id: developers.dig(:first, :id)
+        developer_id: developers.dig(:first, :id),
       )
     end
 
@@ -36,7 +36,7 @@ RSpec.describe "Api::V1::OrderItems", type: :request do
       before do
         get api_v1_order_items_path(order), headers: valid_headers[:first_dev]
       end
-      context 'when the order exists' do
+      context "when the order exists" do
         it "returns http success" do
           expect(response).to have_http_status(:success)
         end
@@ -46,7 +46,7 @@ RSpec.describe "Api::V1::OrderItems", type: :request do
         end
       end
 
-      context 'when the order is not found' do
+      context "when the order is not found" do
         before do
           get api_v1_order_items_path(UUID7.generate),
               headers: valid_headers[:first_dev]
@@ -57,13 +57,13 @@ RSpec.describe "Api::V1::OrderItems", type: :request do
         end
 
         it "returns an error message" do
-          expect(response_body[:error]).to eq('Order not found')
+          expect(response_body[:error]).to eq("Order not found")
         end
       end
     end
 
     describe "GET /api/v1/orders/:order_id/order_items/:id" do
-      context 'when the order and the order items are found' do
+      context "when the order and the order items are found" do
         before do
           get api_v1_order_item_path(order, order_item),
               headers: valid_headers[:first_dev]
@@ -78,7 +78,7 @@ RSpec.describe "Api::V1::OrderItems", type: :request do
         end
       end
 
-      context 'when the order item is not found' do
+      context "when the order item is not found" do
         before do
           get api_v1_order_item_path(order, UUID7.generate),
               headers: valid_headers[:first_dev]
@@ -89,11 +89,11 @@ RSpec.describe "Api::V1::OrderItems", type: :request do
         end
 
         it "returns an error message" do
-          expect(response_body[:error]).to eq('OrderItem not found')
+          expect(response_body[:error]).to eq("OrderItem not found")
         end
       end
 
-      context 'when the order is not found' do
+      context "when the order is not found" do
         before do
           get api_v1_order_item_path(UUID7.generate, order_item),
               headers: valid_headers[:first_dev]
@@ -104,7 +104,7 @@ RSpec.describe "Api::V1::OrderItems", type: :request do
         end
 
         it "returns an error message" do
-          expect(response_body[:error]).to eq('Order not found')
+          expect(response_body[:error]).to eq("Order not found")
         end
       end
     end

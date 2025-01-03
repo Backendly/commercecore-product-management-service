@@ -1,35 +1,35 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-require 'support/shared_contexts'
+require "rails_helper"
+require "support/shared_contexts"
 
-RSpec.describe "Api::V1::Products", type: :request do
-  include_context 'common data'
+RSpec.describe "API::V1::Products", type: :request do
+  include_context "common data"
 
   before do
-    mock_authentication(controller_class: Api::V1::ProductsController)
+    mock_authentication(controller_class: API::V1::ProductsController)
   end
 
   let!(:valid_attributes) do
     {
       product_one: {
-        name: 'Tea Maker',
-        description: 'A device for heating food quickly and easily. ' \
-          'It is a kitchen appliance',
+        name: "Tea Maker",
+        description: "A device for heating food quickly and easily. " \
+        "It is a kitchen appliance",
         price: 100,
         stock_quantity: 10,
-        currency: 'USD',
+        currency: "USD",
         available: true,
         category_id: first_dev_category_kitchen.id
       },
 
       product_two: {
-        name: 'Another Kitchen Product',
-        description: 'A device for cooling food quickly and easily. ' \
-          'It is a kitchen appliance',
+        name: "Another Kitchen Product",
+        description: "A device for cooling food quickly and easily. " \
+        "It is a kitchen appliance",
         price: 200,
         stock_quantity: 50,
-        currency: 'USD',
+        currency: "USD",
         available: true
       }
     }
@@ -38,30 +38,30 @@ RSpec.describe "Api::V1::Products", type: :request do
   let!(:invalid_attributes) do
     {
       product_with_no_name: {
-        description: 'A device for heating food quickly and easily. ' \
-          'It is a kitchen appliance',
+        description: "A device for heating food quickly and easily. " \
+        "It is a kitchen appliance",
         price: 100,
         stock_quantity: 10
       },
 
       product_with_no_price: {
-        name: 'Refrigerator',
-        description: 'A device for cooling food quickly and easily. ' \
-          'It is a kitchen appliance',
+        name: "Refrigerator",
+        description: "A device for cooling food quickly and easily. " \
+        "It is a kitchen appliance",
         stock_quantity: 50
       },
       product_with_non_numeric_price: {
-        name: 'Refrigerator',
-        description: 'A device for cooling food quickly and easily. ' \
-          'It is a kitchen appliance',
-        price: '100',
+        name: "Refrigerator",
+        description: "A device for cooling food quickly and easily. " \
+        "It is a kitchen appliance",
+        price: "100",
         stock_quantity: 50
       },
       product_with_no_app_id: {
-        name: 'Refrigerator',
-        description: 'A device for cooling food quickly and easily. ' \
-          'It is a kitchen appliance',
-        price: '100',
+        name: "Refrigerator",
+        description: "A device for cooling food quickly and easily. " \
+        "It is a kitchen appliance",
+        price: "100",
         stock_quantity: 50
       }
     }
@@ -70,71 +70,71 @@ RSpec.describe "Api::V1::Products", type: :request do
   # create 3 products for each developer
   before do
     Product.create!(
-      name: 'Microwave',
-      description: 'A device for heating food quickly and' \
-        'easily. It is a kitchen appliance',
+      name: "Microwave",
+      description: "A device for heating food quickly and" \
+      "easily. It is a kitchen appliance",
       price: 100,
       stock_quantity: 10,
-      currency: 'USD',
+      currency: "USD",
       available: true,
       developer_id: developers.dig(:first, :id),
       category_id: first_dev_category_kitchen.id,
       app_id: users.dig(:one, :app_id),
-      user_id: users.dig(:one, :id)
+      user_id: users.dig(:one, :id),
     )
     Product.create!(
-      name: 'Refrigerator',
-      description: 'A device for cooling food quickly' \
-        'and easily. It is a kitchen appliance',
+      name: "Refrigerator",
+      description: "A device for cooling food quickly" \
+      "and easily. It is a kitchen appliance",
       price: 200,
       stock_quantity: 50,
-      currency: 'USD',
+      currency: "USD",
       available: true,
       developer_id: developers.dig(:first, :id),
       user_id: users.dig(:two, :id),
       app_id: users.dig(:two, :app_id),
-      category_id: first_dev_category_kitchen.id
+      category_id: first_dev_category_kitchen.id,
     )
     Product.create!(
-      name: 'Toaster',
-      description: 'A device for toasting bread quickly and ' \
-        'easily. It is a kitchen appliance',
+      name: "Toaster",
+      description: "A device for toasting bread quickly and " \
+      "easily. It is a kitchen appliance",
       price: 300,
       stock_quantity: 20,
-      currency: 'USD',
+      currency: "USD",
       available: true,
       developer_id: developers.dig(:first, :id),
       user_id: users.dig(:two, :id),
       category_id: first_dev_category_kitchen.id,
-      app_id: users.dig(:two, :app_id)
+      app_id: users.dig(:two, :app_id),
     )
   end
 
   describe "GET /index" do
-    context 'with invalid or no authentication details' do
-      context 'without X-Developer-Token and X-User-Id in the headers' do
-        it 'returns 401 when not provided' do
+    context "with invalid or no authentication details" do
+      context "without X-Developer-Token and X-User-Id in the headers" do
+        it "returns 401 when not provided" do
           get api_v1_products_url
 
           expect(response).to have_http_status(:unauthorized)
         end
 
-        it 'returns the response in a JSON format' do
+        it "returns the response in a JSON format" do
           get api_v1_products_url
 
-          expect(response.content_type).to include('application/json')
+          expect(response.content_type).to include("application/json")
         end
 
-        it 'contains a message and error stating the token is missing' do
+        it "contains a message and error stating the token is missing" do
           get api_v1_products_url
 
           expect(response_body.dig(:details, :message)).to \
-            include('Please provide a valid developer token')
+            include("Please provide a valid developer token")
           expect(response_body.dig(:details, :error)).to \
-            eq('Invalid developer token')
+            eq("Invalid developer token")
         end
 
-        it 'has the expected response body format' do
+        it "has the expected response body format" do
           get api_v1_products_url
 
           expect(response_body.keys).to contain_exactly(
@@ -153,31 +153,31 @@ RSpec.describe "Api::V1::Products", type: :request do
           )
         end
 
-        it 'has the correct error data in the response' do
+        it "has the correct error data in the response" do
           get api_v1_products_url
 
-          expect(response_body[:error]).to eq('Authorization failed')
+          expect(response_body[:error]).to eq("Authorization failed")
 
           # validate the contents of the meta body
           metadata = response_body[:meta]
 
           expect(metadata[:request_path]).to eq(api_v1_products_url)
-          expect(metadata[:request_method]).to eq('GET')
+          expect(metadata[:request_method]).to eq("GET")
           expect(metadata[:status_code]).to eq(401)
           expect(metadata[:success]).to be(false)
 
           # validate the details in the details body
           details = response_body[:details]
 
-          expect(details[:error]).to eq('Invalid developer token')
+          expect(details[:error]).to eq("Invalid developer token")
           expect(details[:message]).to eq(
-            'Please provide a valid developer token in the header. ' \
-              'E.g., X-Developer-Token: <developer_token>'
+            "Please provide a valid developer token in the header. " \
+            "E.g., X-Developer-Token: <developer_token>"
           )
         end
       end
 
-      context 'with a X-Developer-Token header but not X-User-Id header' do
+      context "with a X-Developer-Token header but not X-User-Id header" do
         before do
           allow_any_instance_of(UserServiceClient).to \
             receive(:fetch_developer_id).and_return(
@@ -185,7 +185,7 @@ RSpec.describe "Api::V1::Products", type: :request do
             )
         end
 
-        it 'returns a 401' do
+        it "returns a 401" do
           get api_v1_products_url,
               headers: { 'X-Developer-Token': UUID7.generate }
 
@@ -193,27 +193,27 @@ RSpec.describe "Api::V1::Products", type: :request do
           expect(response_body.dig(:meta, :status_code)).to eq(401)
         end
 
-        it 'returns an error message mentioning X-User-Id is missing' do
+        it "returns an error message mentioning X-User-Id is missing" do
           get api_v1_products_url,
               headers: { 'X-Developer-Token': UUID7.generate }
 
-          expect(response_body.dig(:details, :error)).to eq('Invalid user ID')
+          expect(response_body.dig(:details, :error)).to eq("Invalid user ID")
           expect(response_body.dig(:details, :message)).to eq(
-            'Please provide a valid user ID. E.g., X-User-Id: <user_id>'
+            "Please provide a valid user ID. E.g., X-User-Id: <user_id>"
           )
         end
       end
     end
 
-    context 'with valid authentication credentials' do
+    context "with valid authentication credentials" do
       let!(:expected_developer_id) { developers.dig(:first, :id) }
 
       before do
         mock_authentication(
-          controller_class: Api::V1::ProductsController,
+          controller_class: API::V1::ProductsController,
           developer_id: developers.dig(:first, :id),
           user_id: users.dig(:one, :id),
-          app_id: users.dig(:one, :app_id)
+          app_id: users.dig(:one, :app_id),
         )
 
         Rails.cache.clear
@@ -228,8 +228,8 @@ RSpec.describe "Api::V1::Products", type: :request do
         expect(response).to be_successful
       end
 
-      context 'without filters' do
-        it 'returns all products' do
+      context "without filters" do
+        it "returns all products" do
           get api_v1_products_url, headers: valid_headers[:first_dev]
 
           expect(response).to have_http_status(:success)
@@ -237,32 +237,32 @@ RSpec.describe "Api::V1::Products", type: :request do
         end
       end
 
-      context 'with name filter' do
+      context "with name filter" do
         let!(:filtered_product) do
           FactoryBot.create(:product,
-                            name: 'Filtered Product',
+                            name: "Filtered Product",
                             developer_id: developers.dig(:first, :id),
                             user_id: users.dig(:one, :id),
                             app_id: users.dig(:one, :app_id),
                             price: 100,
                             stock_quantity: 10,
-                            description: 'A filtered case' * 10,
+                            description: "A filtered case" * 10,
                             category_id: nil)
         end
 
-        it 'returns filtered products by name' do
+        it "returns filtered products by name" do
           get api_v1_products_url, headers: valid_headers[:first_dev],
-                                   params: { name: 'Filtered Product' }
+                                   params: { name: "Filtered Product" }
 
           expect(response).to have_http_status(:success)
           expect(response_body[:data].size).to eq(1)
           expect(response_body[:data].first.dig(:attributes, :name)).to \
-            eq('Filtered Product')
+            eq("Filtered Product")
         end
       end
 
-      context 'with category filter' do
-        it 'returns filtered products by category' do
+      context "with category filter" do
+        it "returns filtered products by category" do
           get api_v1_products_url,
               headers: valid_headers[:first_dev],
               params: { category_id: first_dev_category_kitchen.id }
@@ -278,39 +278,39 @@ RSpec.describe "Api::V1::Products", type: :request do
         end
       end
 
-      context 'with price range filter' do
+      context "with price range filter" do
         let!(:cheap_price) do
           FactoryBot.create(:product,
-                            name: 'Cheap Product',
+                            name: "Cheap Product",
                             developer_id: developers.dig(:first, :id),
                             user_id: users.dig(:one, :id),
                             app_id: users.dig(:one, :app_id),
                             price: 5,
                             stock_quantity: 10,
-                            description: 'A cheap product ' * 4,
+                            description: "A cheap product " * 4,
                             category_id: first_dev_category_kitchen.id)
         end
 
         let!(:expensive_price) do
           FactoryBot.create(:product,
-                            name: 'Expensive Product',
+                            name: "Expensive Product",
                             developer_id: developers.dig(:first, :id),
                             user_id: users.dig(:one, :id),
                             app_id: users.dig(:one, :app_id),
                             price: 15,
                             stock_quantity: 10,
-                            description: 'An expensive product ' * 4,
+                            description: "An expensive product " * 4,
                             category_id: first_dev_category_kitchen.id)
         end
 
-        it 'returns products within the specified price range' do
+        it "returns products within the specified price range" do
           get api_v1_products_url, headers: valid_headers[:first_dev],
                                    params: { min_price: 5, max_price: 10 }
 
           expect(response).to have_http_status(:success)
           expect(response_body[:data].size).to eq(1)
           expect(response_body[:data].first.dig(:attributes, :name)).to \
-            eq('Cheap Product')
+            eq("Cheap Product")
           expect(response_body[:data].first.dig(
             :attributes, :price
           ).to_i).to eq(5)
@@ -318,13 +318,13 @@ RSpec.describe "Api::V1::Products", type: :request do
       end
     end
 
-    describe 'caching' do
+    describe "caching" do
       before do
         mock_authentication(
-          controller_class: Api::V1::ProductsController,
+          controller_class: API::V1::ProductsController,
           developer_id: developers.dig(:first, :id),
           user_id: users.dig(:one, :id),
-          app_id: users.dig(:one, :app_id)
+          app_id: users.dig(:one, :app_id),
         )
 
         Rails.cache.clear
@@ -344,26 +344,26 @@ RSpec.describe "Api::V1::Products", type: :request do
         Product.where(developer_id:, app_id:).maximum(:updated_at).to_i
       end
 
-      it 'caches the product response' do
+      it "caches the product response" do
         get api_v1_products_url, headers: valid_headers[:first_dev]
 
         expect(response).to have_http_status(:ok)
         expect(Rails.cache).to have_received(:fetch).with(
           "#{base_key}_page_#{page}_size_#{page_size}_#{updated_at_timestamp}",
-          expires_in: 1.day
+          expires_in: 1.day,
         )
       end
 
-      it 'caches the product response with filters' do
+      it "caches the product response with filters" do
         get api_v1_products_url, headers: valid_headers[:first_dev],
-                                 params: { name: 'Microwave' }
+                                 params: { name: "Microwave" }
 
         expect(response).to have_http_status(:ok)
 
         expect(Rails.cache).to have_received(:fetch).with(
           "#{base_key}_page_#{page}_size_#{page_size}_name_Microwave_" \
-            "#{updated_at_timestamp}",
-          expires_in: 1.day
+          "#{updated_at_timestamp}",
+          expires_in: 1.day,
         )
       end
     end
@@ -372,10 +372,10 @@ RSpec.describe "Api::V1::Products", type: :request do
   describe "GET /show" do
     before do
       mock_authentication(
-        controller_class: Api::V1::ProductsController,
+        controller_class: API::V1::ProductsController,
         developer_id: developers.dig(:first, :id),
         user_id: users.dig(:one, :id),
-        app_id: users.dig(:one, :app_id)
+        app_id: users.dig(:one, :app_id),
       )
     end
 
@@ -390,7 +390,7 @@ RSpec.describe "Api::V1::Products", type: :request do
       expect(response).to have_http_status(:ok)
     end
 
-    it 'returns the expected response body format' do
+    it "returns the expected response body format" do
       get api_v1_product_url(product), headers: valid_headers[:first_dev]
       expect(response).to have_http_status(:ok)
 
@@ -403,7 +403,7 @@ RSpec.describe "Api::V1::Products", type: :request do
       )
     end
 
-    it 'returns the expected product data' do
+    it "returns the expected product data" do
       get api_v1_product_url(product), headers: valid_headers[:first_dev]
       expect(response).to have_http_status(:ok)
 
@@ -411,7 +411,7 @@ RSpec.describe "Api::V1::Products", type: :request do
       product_attributes = product_data[:attributes]
 
       expect(product_data[:id]).to eq(product.id)
-      expect(product_data[:type]).to eq('product')
+      expect(product_data[:type]).to eq("product")
       expect(product_attributes[:name]).to eq(product.name)
       expect(product_attributes[:description]).to eq(product.description)
       expect(product_attributes[:price].to_f).to eq(product.price.to_f)
@@ -420,15 +420,15 @@ RSpec.describe "Api::V1::Products", type: :request do
       expect(product_attributes[:available]).to eq(product.available)
     end
 
-    context 'errors' do
-      it 'returns a 404 status code for non-existent products' do
+    context "errors" do
+      it "returns a 404 status code for non-existent products" do
         get api_v1_product_url(UUID7.generate),
             headers: valid_headers[:first_dev]
 
         expect(response).to have_http_status(404)
       end
 
-      it 'returns the expected response body format for errors' do
+      it "returns the expected response body format for errors" do
         get api_v1_product_url(UUID7.generate),
             headers: valid_headers[:first_dev]
 
@@ -447,20 +447,20 @@ RSpec.describe "Api::V1::Products", type: :request do
       end
     end
 
-    it 'returns a JSON response' do
+    it "returns a JSON response" do
       get api_v1_product_url(UUID7.generate),
           headers: valid_headers[:first_dev]
-      expect(response.content_type).to include('application/json')
+      expect(response.content_type).to include("application/json")
     end
   end
 
   describe "POST /create" do
     before do
       mock_authentication(
-        controller_class: Api::V1::ProductsController,
+        controller_class: API::V1::ProductsController,
         developer_id: developers.dig(:first, :id),
         user_id: users.dig(:one, :id),
-        app_id: users.dig(:one, :app_id)
+        app_id: users.dig(:one, :app_id),
       )
     end
 
@@ -473,7 +473,7 @@ RSpec.describe "Api::V1::Products", type: :request do
         end.to change(Product, :count).by(1)
       end
 
-      it 'returns a 201 status code' do
+      it "returns a 201 status code" do
         post api_v1_products_url,
              params: { product: valid_attributes[:product_one] },
              headers: valid_headers[:first_dev], as: :json
@@ -491,9 +491,9 @@ RSpec.describe "Api::V1::Products", type: :request do
       end
 
       context "the category_id doesn't belong to the current developer" do
-        it 'returns a 400: Category does not exist' do
+        it "returns a 400: Category does not exist" do
           product = valid_attributes[:product_two].merge(
-            category_id: second_dev_category_computers.id
+            category_id: second_dev_category_computers.id,
           )
 
           post api_v1_products_url,
@@ -503,9 +503,9 @@ RSpec.describe "Api::V1::Products", type: :request do
           expect(response).to have_http_status(400)
         end
 
-        it 'returns a JSON response with the error message' do
+        it "returns a JSON response with the error message" do
           product = valid_attributes[:product_two].merge(
-            category_id: second_dev_category_computers.id
+            category_id: second_dev_category_computers.id,
           )
 
           post api_v1_products_url,
@@ -515,9 +515,9 @@ RSpec.describe "Api::V1::Products", type: :request do
           expect(response.content_type).to include("application/json")
         end
 
-        it 'has the expected error messages' do
+        it "has the expected error messages" do
           product = valid_attributes[:product_two].merge(
-            category_id: second_dev_category_computers.id
+            category_id: second_dev_category_computers.id,
           )
 
           post api_v1_products_url,
@@ -525,9 +525,9 @@ RSpec.describe "Api::V1::Products", type: :request do
                headers: valid_headers[:first_dev], as: :json
 
           expect(response_body.dig(:details, :message)).to \
-            include('Verify you have the category you specified')
+            include("Verify you have the category you specified")
 
-          expect(response_body[:error]).to eq('Category not found')
+          expect(response_body[:error]).to eq("Category not found")
         end
       end
     end
@@ -549,7 +549,7 @@ RSpec.describe "Api::V1::Products", type: :request do
         expect(response.content_type).to include("application/json")
       end
 
-      it 'returns a 422 when the product price is not provided' do
+      it "returns a 422 when the product price is not provided" do
         post api_v1_products_url,
              params: { product: invalid_attributes[:product_with_no_price] },
              headers: valid_headers[:first_dev], as: :json
@@ -557,7 +557,7 @@ RSpec.describe "Api::V1::Products", type: :request do
         expect(response).to have_http_status(422)
       end
 
-      it 'returns a 422 when the price is a not a numeric value' do
+      it "returns a 422 when the price is a not a numeric value" do
         post api_v1_products_url,
              params: {
                product: invalid_attributes[:product_with_non_numeric_price]
@@ -575,9 +575,10 @@ RSpec.describe "Api::V1::Products", type: :request do
                params: { product: value },
                headers: valid_headers[:first_dev], as: :json
 
-          expect(response)
-            .to have_http_status(422),
-              "Expected 422 for #{key} but got #{response.status}"
+          # rubocop:disable Metrics/LineLength
+          expect(response).to have_http_status(422),
+                              "Expected 422 for #{key} but got #{response.status}"
+          # rubocop:enable Metrics/LineLength
         end
       end
     end
@@ -586,16 +587,16 @@ RSpec.describe "Api::V1::Products", type: :request do
   describe "PATCH /update" do
     before do
       mock_authentication(
-        controller_class: Api::V1::ProductsController,
+        controller_class: API::V1::ProductsController,
         developer_id: developers.dig(:first, :id),
         user_id: users.dig(:one, :id),
-        app_id: users.dig(:one, :app_id)
+        app_id: users.dig(:one, :app_id),
       )
     end
 
     context "with valid parameters" do
       let!(:product) { Product.first }
-      let(:new_attributes) { { name: 'Updated Product name' } }
+      let(:new_attributes) { { name: "Updated Product name" } }
 
       it "updates the requested product" do
         patch api_v1_product_url(product),
@@ -618,10 +619,10 @@ RSpec.describe "Api::V1::Products", type: :request do
   describe "DELETE /destroy" do
     before do
       mock_authentication(
-        controller_class: Api::V1::ProductsController,
+        controller_class: API::V1::ProductsController,
         developer_id: developers.dig(:first, :id),
         user_id: users.dig(:one, :id),
-        app_id: users.dig(:one, :app_id)
+        app_id: users.dig(:one, :app_id),
       )
     end
 
@@ -634,14 +635,14 @@ RSpec.describe "Api::V1::Products", type: :request do
       end.to change(Product, :count).by(-1)
     end
 
-    it 'returns a 204 status code' do
+    it "returns a 204 status code" do
       delete api_v1_product_url(product),
              headers: valid_headers[:first_dev], as: :json
 
       expect(response).to have_http_status(:no_content)
     end
 
-    it 'returns no content in the response body' do
+    it "returns no content in the response body" do
       delete api_v1_product_url(product),
              headers: valid_headers[:first_dev], as: :json
 
@@ -649,13 +650,13 @@ RSpec.describe "Api::V1::Products", type: :request do
     end
   end
 
-  describe 'Product Images' do
+  describe "Product Images" do
     before do
       mock_authentication(
-        controller_class: Api::V1::ProductsController,
+        controller_class: API::V1::ProductsController,
         developer_id: developers.dig(:first, :id),
         user_id: users.dig(:one, :id),
-        app_id: users.dig(:one, :app_id)
+        app_id: users.dig(:one, :app_id),
       )
     end
 
@@ -687,11 +688,11 @@ RSpec.describe "Api::V1::Products", type: :request do
     end
 
     context "when adding images to products" do
-      it 'attaches an image to a product' do
+      it "attaches an image to a product" do
         product = Product.first
 
         post upload_images_api_v1_product_url(product),
-          params: { images: [ image1, image2, image3 ] },
+             params: { images: [ image1, image2, image3 ] },
              headers: valid_headers[:first_dev]
 
         expect(product.images.attached?).to be_truthy
@@ -699,14 +700,14 @@ RSpec.describe "Api::V1::Products", type: :request do
         expect(response).to have_http_status(:ok)
       end
 
-      it 'returns a 404 status code for non-existent products' do
+      it "returns a 404 status code for non-existent products" do
         post upload_images_api_v1_product_url(UUID7.generate),
              headers: valid_headers[:first_dev]
 
         expect(response).to have_http_status(404)
       end
 
-      it 'returns the expected response body format for errors' do
+      it "returns the expected response body format for errors" do
         post upload_images_api_v1_product_url(UUID7.generate),
              headers: valid_headers[:first_dev]
 
@@ -724,17 +725,17 @@ RSpec.describe "Api::V1::Products", type: :request do
         expect(response_body[:details].keys).to contain_exactly(:message)
 
         # check the validity of the type of the error message
-        expect(response_body[:error]).to eq('Product not found')
+        expect(response_body[:error]).to eq("Product not found")
         expect(response_body[:details][:message]).to include(
           "Couldn't find Product with id"
         )
       end
 
-      it 'fails for non-image files' do
+      it "fails for non-image files" do
         product = Product.first
 
         post upload_images_api_v1_product_url(product),
-          params: { images: [ invalid_image ] },
+             params: { images: [ invalid_image ] },
              headers: valid_headers[:first_dev]
 
         expect(product.images.attached?).to be_falsey
@@ -742,11 +743,11 @@ RSpec.describe "Api::V1::Products", type: :request do
         expect(response).to have_http_status(:unprocessable_content)
       end
 
-      it 'fails for images that exceed the maximum size' do
+      it "fails for images that exceed the maximum size" do
         product = Product.first
 
         post upload_images_api_v1_product_url(product),
-          params: { images: [ large_file ] },
+             params: { images: [ large_file ] },
              headers: valid_headers[:first_dev]
 
         expect(product.images.attached?).to be_falsey
@@ -758,7 +759,7 @@ RSpec.describe "Api::V1::Products", type: :request do
     end
 
     context "when deleting images from products" do
-      it 'deletes an image from a product' do
+      it "deletes an image from a product" do
         product.images.attach(image1)
 
         delete delete_image_api_v1_product_url(product, product.images.first),
@@ -767,14 +768,14 @@ RSpec.describe "Api::V1::Products", type: :request do
         expect(response).to have_http_status(:success)
       end
 
-      it 'returns a 404 status code for non-existent products' do
+      it "returns a 404 status code for non-existent products" do
         delete delete_image_api_v1_product_url(UUID7.generate, UUID7.generate),
                headers: valid_headers[:first_dev]
 
         expect(response).to have_http_status(:not_found)
       end
 
-      it 'returns a 404 status code for non-existent images' do
+      it "returns a 404 status code for non-existent images" do
         product = Product.first
 
         delete delete_image_api_v1_product_url(product, UUID7.generate),
@@ -785,7 +786,7 @@ RSpec.describe "Api::V1::Products", type: :request do
     end
 
     context "when listing products" do
-      it 'returns a list of images for a product' do
+      it "returns a list of images for a product" do
         product.images.attach(image1, image2, image3)
 
         get api_v1_product_url(product),
@@ -795,14 +796,14 @@ RSpec.describe "Api::V1::Products", type: :request do
         expect(response_body.dig(:data, :attributes, :images).size).to eq(3)
       end
 
-      it 'returns a 404 status code for non-existent products' do
+      it "returns a 404 status code for non-existent products" do
         get api_v1_product_url(UUID7.generate),
             headers: valid_headers[:first_dev]
 
         expect(response).to have_http_status(:not_found)
       end
 
-      it 'returns an empty array for products with no images' do
+      it "returns an empty array for products with no images" do
         product = Product.last
 
         get api_v1_product_url(product),
@@ -813,9 +814,9 @@ RSpec.describe "Api::V1::Products", type: :request do
       end
     end
 
-    describe 'Deleting' do
-      context 'when the image is not found' do
-        it 'returns a 404 status code' do
+    describe "Deleting" do
+      context "when the image is not found" do
+        it "returns a 404 status code" do
           delete delete_image_api_v1_product_url(product, UUID7.generate),
                  headers: valid_headers[:first_dev]
 

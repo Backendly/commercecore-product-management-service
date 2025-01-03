@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # app/controllers/api/v1/root_controller.rb
-module Api
+module API
   module V1
     # RootController is responsible for handling the root endpoint of the API.
     # It provides a welcome message and a list of available endpoints.
@@ -31,7 +31,7 @@ module Api
           version: "v1",
           base_url: "#{request.base_url}/api/v1",
           documentation: "https://documenter.getpostman.com/view/" \
-            "14404907/2sAXjRWpnZ",
+          "14404907/2sAXjRWpnZ",
           available_endpoints: {
             products: "/api/v1/products",
             categories: "/api/v1/categories",

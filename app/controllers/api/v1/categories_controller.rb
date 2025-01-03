@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Api
+module API
   module V1
     # Controller for version of Categories side of Product Management Service
     # This controller handles CRUD operations for categories.
@@ -31,12 +31,12 @@ module Api
           filters: {
             name: params[:name],
             search: params[:search]
-          }
+          },
         ) do |collection|
           json_response(
             collection,
             message: "Categories retrieved successfully",
-            serializer:
+            serializer:,
           )
         end
 
@@ -53,7 +53,7 @@ module Api
         render json: json_response(
           category,
           message: "Category retrieved successfully",
-          serializer:
+          serializer:,
         )
       end
 
@@ -65,7 +65,7 @@ module Api
 
         # Render the JSON response with the created category
         render json: json_response(@category,
-          message: "Category created successfully",
+                                   message: "Category created successfully",
                                    serializer:), status: :created
       end
 
@@ -76,8 +76,8 @@ module Api
         @category.update!(category_params)
 
         render json: json_response(@category,
-                                   serializer:,
-          message: "Category updated successfully")
+                              serializer:,
+                              message: "Category updated successfully")
       end
 
       # DELETE /api/v1/categories/:id
