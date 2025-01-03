@@ -31,7 +31,6 @@ RSpec.describe "API::V1::CartItems", type: :request do
                params: { cart_item: { product_id: product.id, quantity: 4 } },
                headers: valid_headers[:first_dev]
 
-          puts response_body
           expect(response).to have_http_status(:created)
           expect(response_body.dig(:meta, :message)).to eq(
             "Cart item created successfully"
