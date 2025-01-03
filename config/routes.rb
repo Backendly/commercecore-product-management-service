@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   mount Sidekiq::Web => "/sidekiq"
 
-  namespace :api do
+  namespace :api, defaults: { format: :json } do
     namespace :v1 do
       get "/", to: "root#index"
       get "status", to: "status#show"
