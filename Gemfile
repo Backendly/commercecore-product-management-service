@@ -65,7 +65,7 @@ group :test do
   gem "database_cleaner-active_record"
 end
 
-gem "httparty", "~> 0.22.0"
+gem "httparty", "~> 0.23.1"
 
 gem "rack-cache", "~> 1.17"
 

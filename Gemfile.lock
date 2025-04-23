@@ -110,7 +110,7 @@ GEM
       i18n (>= 1.8.11, < 2)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    httparty (0.22.0)
+    httparty (0.23.1)
       csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
@@ -337,7 +337,7 @@ DEPENDENCIES
   dotenv-rails
   factory_bot_rails
   faker
-  httparty (~> 0.22.0)
+  httparty (~> 0.23.1)
   jsonapi-serializer
   kaminari
   pg (~> 1.5)
