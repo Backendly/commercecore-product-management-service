@@ -41,7 +41,7 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
-  gem "rspec-rails", "~> 7.1"
+  gem "rspec-rails", ">= 7.1"
 
   gem "factory_bot_rails"
 
@@ -65,10 +65,10 @@ group :test do
   gem "database_cleaner-active_record"
 end
 
-gem "httparty", "~> 0.22.0"
+gem "httparty", ">= 0.22.0"
 
 gem "rack-cache", "~> 1.17"
 
-gem "sidekiq", "~> 7.3"
+gem "sidekiq", ">= 7.3"
 
 gem "rack-cors", require: "rack/cors"
