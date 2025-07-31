@@ -69,6 +69,6 @@ gem "httparty", "~> 0.22.0"
 
 gem "rack-cache", "~> 1.17"
 
-gem "sidekiq", "~> 7.3"
+gem "sidekiq", "~> 8.0"
 
 gem "rack-cors", require: "rack/cors"
